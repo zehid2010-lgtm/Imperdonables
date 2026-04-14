@@ -253,6 +253,11 @@
         : '<span class="inline-flex items-center justify-center h-7 px-3 rounded-full bg-rose-500 text-white text-[11px] font-black">NO</span>';
     }
 
+    function avgClientPct(data){
+      if (!data.length) return 0;
+      return data.reduce((acc, item) => acc + Number(item.porcentaje || 0), 0) / data.length;
+    }
+
     async function fetchCSV(url){
       const res = await fetch(url, { cache: 'no-store' });
       if (!res.ok) throw new Error('No se pudo leer el CSV');
@@ -453,12 +458,12 @@
       const totalClientes = filteredData.length;
       const totalImperdonables = filteredData.reduce((a, b) => a + b.totalImperdonables, 0);
       const totalCumplidos = filteredData.reduce((a, b) => a + b.cumplidos, 0);
-      const avance = pct(totalCumplidos, totalImperdonables);
+      const avancePromedio = avgClientPct(filteredData);
 
       document.getElementById('kpiClientes').textContent = totalClientes;
       document.getElementById('kpiImperdonables').textContent = totalImperdonables;
       document.getElementById('kpiCumplidos').textContent = totalCumplidos;
-      document.getElementById('kpiAvance').textContent = formatPct(avance);
+      document.getElementById('kpiAvance').textContent = formatPct(avancePromedio);
       document.getElementById('resultInfo').textContent = `${totalClientes} clientes visibles`;
     }
 
