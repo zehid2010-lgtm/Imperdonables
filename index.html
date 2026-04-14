@@ -253,16 +253,31 @@
         : '<span class="inline-flex items-center justify-center h-7 px-3 rounded-full bg-rose-500 text-white text-[11px] font-black">NO</span>';
     }
 
-    function avgClientPct(data){
-      if (!data.length) return 0;
-      return data.reduce((acc, item) => acc + Number(item.porcentaje || 0), 0) / data.length;
+    function isBiBooleanValue(rawVal){
+      const v = normUpper(rawVal);
+      return ['0', '0.0', '1', '1.0', 'SI', 'NO', 'OK', 'CUMPLIDO'].includes(v);
     }
 
-    async function fetchCSV(url){
-      const res = await fetch(url, { cache: 'no-store' });
-      if (!res.ok) throw new Error('No se pudo leer el CSV');
-      const text = await res.text();
-      return parseCSV(text);
+    function isDoneValue(rawVal){
+      const v = normUpper(rawVal);
+      return ['1', '1.0', 'SI', 'OK', 'CUMPLIDO'].includes(v);
+    }
+
+    function findColumnIndex(headersA, headersB, target){
+      const t = normUpper(target);
+      for (let i = 0; i < Math.max(headersA.length, headersB.length); i++) {
+        const a = normUpper(headersA[i]);
+        const b = normUpper(headersB[i]);
+        if (a === t || b === t) return i;
+      }
+      return -1;
+    }
+
+    function getImperdonableName(top, bottom, idx){
+      const a = norm(top[idx]);
+      const b = norm(bottom[idx]);
+      const joined = [a, b].filter(Boolean).join(' ').trim();
+      return joined || `Imperdonable ${idx + 1}`;
     }
 
     function buildClientRecords(rows, segmento){
@@ -272,23 +287,25 @@
       const row2 = rows[1] || [];
       const row3 = rows[2] || [];
 
-      const hasThreeHeaderRows = norm(row3[0]) === 'Detalle';
+      const hasThreeHeaderRows = normUpper(row3[0]) === 'DETALLE';
       const metaHeaderRow = hasThreeHeaderRows ? row3 : row2;
       const displayHeaderTop = row1;
       const displayHeaderBottom = hasThreeHeaderRows ? row2 : [];
       const dataRows = rows.slice(hasThreeHeaderRows ? 3 : 2);
 
-      const detalleIdx = metaHeaderRow.indexOf('Detalle');
-      const territorioIdx = metaHeaderRow.indexOf('Territorio');
-      const cediIdx = metaHeaderRow.indexOf('Cedi');
-      const jefeIdx = metaHeaderRow.indexOf('Jefe');
-      const rutaIdx = metaHeaderRow.indexOf('Ruta');
-      const outclIdx = metaHeaderRow.indexOf('Out-CL');
+      const detalleIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'DETALLE');
+      const territorioIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'TERRITORIO');
+      const cediIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'CEDI');
+      const jefeIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'JEFE');
+      const rutaIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'RUTA');
+      const outclIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'OUT-CL');
 
       if (outclIdx === -1) return [];
 
+      // BI: las columnas válidas llegan hasta "Total", pero "Total" NO se cuenta como imperdonable
+      const totalIdx = findColumnIndex(displayHeaderTop, displayHeaderBottom, 'Total');
       const dynamicStart = outclIdx + 1;
-      const dynamicEnd = metaHeaderRow.length;
+      const dynamicEndExclusive = totalIdx > -1 ? totalIdx : metaHeaderRow.length;
 
       let lastDetalle = '';
       let lastTerritorio = '';
@@ -314,25 +331,18 @@
 
         const imperdonables = [];
         let cumplidos = 0;
+        let totalValidos = 0;
 
-        for (let i = dynamicStart; i < dynamicEnd; i++) {
-          const top = norm(displayHeaderTop[i]);
-          const bottom = norm(displayHeaderBottom[i]);
-
-          let nombre = hasThreeHeaderRows
-            ? (bottom || top || `Imperdonable ${i - dynamicStart + 1}`)
-            : (top || `Imperdonable ${i - dynamicStart + 1}`);
-
-          if (!nombre || nombre === '#N/A') {
-            nombre = `Imperdonable ${i - dynamicStart + 1}`;
-          }
-
+        for (let i = dynamicStart; i < dynamicEndExclusive; i++) {
+          const nombre = getImperdonableName(displayHeaderTop, displayHeaderBottom, i);
           const rawVal = norm(row[i]);
-          const numericVal = Number(rawVal);
-          const done =
-            ['1', '1.0', 'SI', 'OK', 'CUMPLIDO'].includes(normUpper(rawVal)) ||
-            (!Number.isNaN(numericVal) && numericVal >= 1);
 
+          // Solo toma valores tipo BI
+          if (!isBiBooleanValue(rawVal)) continue;
+
+          totalValidos++;
+
+          const done = isDoneValue(rawVal);
           if (done) cumplidos++;
 
           imperdonables.push({
@@ -341,8 +351,6 @@
             rawVal
           });
         }
-
-        const totalImperdonables = imperdonables.length;
 
         clients.push({
           key: `${segmento}|${outnum}|${cliente}`,
@@ -354,14 +362,21 @@
           detalle: lastDetalle,
           territorio: lastTerritorio,
           cedi: lastCedi,
-          totalImperdonables,
+          totalImperdonables: totalValidos,
           cumplidos,
-          porcentaje: pct(cumplidos, totalImperdonables),
+          porcentaje: pct(cumplidos, totalValidos),
           imperdonables
         });
       }
 
       return clients;
+    }
+
+    async function fetchCSV(url){
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) throw new Error('No se pudo leer el CSV');
+      const text = await res.text();
+      return parseCSV(text);
     }
 
     async function loadData(){
@@ -431,7 +446,8 @@
           item.jefe,
           item.segmento,
           item.detalle,
-          item.territorio
+          item.territorio,
+          item.cedi
         ].some(v => normUpper(v).includes(q));
 
         const segmentoHit = segmento === 'TODOS' || item.segmento === segmento;
@@ -441,7 +457,7 @@
 
         return textHit && segmentoHit && rutaHit && jefeHit && estadoHit;
       }).sort((a, b) => {
-        if (a.ruta !== b.ruta) return String(a.ruta).localeCompare(String(b.ruta), 'es');
+        if (String(a.ruta) !== String(b.ruta)) return String(a.ruta).localeCompare(String(b.ruta), 'es');
         return String(a.cliente).localeCompare(String(b.cliente), 'es');
       });
 
@@ -456,14 +472,14 @@
 
     function renderKPIs(){
       const totalClientes = filteredData.length;
-      const totalImperdonables = filteredData.reduce((a, b) => a + b.totalImperdonables, 0);
-      const totalCumplidos = filteredData.reduce((a, b) => a + b.cumplidos, 0);
-      const avancePromedio = avgClientPct(filteredData);
+      const totalImperdonables = filteredData.reduce((a, b) => a + Number(b.totalImperdonables || 0), 0);
+      const totalCumplidos = filteredData.reduce((a, b) => a + Number(b.cumplidos || 0), 0);
+      const avance = pct(totalCumplidos, totalImperdonables);
 
       document.getElementById('kpiClientes').textContent = totalClientes;
       document.getElementById('kpiImperdonables').textContent = totalImperdonables;
       document.getElementById('kpiCumplidos').textContent = totalCumplidos;
-      document.getElementById('kpiAvance').textContent = formatPct(avancePromedio);
+      document.getElementById('kpiAvance').textContent = formatPct(avance);
       document.getElementById('resultInfo').textContent = `${totalClientes} clientes visibles`;
     }
 
