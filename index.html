@@ -1,25 +1,851 @@
-for(let i = dynamicStart; i < dynamicEnd; i++){
-  const top = norm(displayHeaderTop[i]);
-  const bottom = norm(displayHeaderBottom[i]);
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Imperdonables Premium</title>
+  <style>
+    :root{
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --text:#172033;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --primary:#0f62fe;
+      --primary-soft:#e8f0ff;
+      --ok:#16a34a;
+      --warn:#f59e0b;
+      --bad:#dc2626;
+      --shadow:0 10px 30px rgba(15, 23, 42, .08);
+      --radius:18px;
+    }
 
-  let nombre = hasThreeHeaderRows
-    ? (bottom || top || `Imperdonable ${i - dynamicStart + 1}`)
-    : (top || `Imperdonable ${i - dynamicStart + 1}`);
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      padding:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family:Arial, Helvetica, sans-serif;
+    }
 
-  if(!nombre || nombre === '#N/A'){
-    nombre = `Imperdonable ${i - dynamicStart + 1}`;
-  }
+    .app{
+      max-width:1400px;
+      margin:0 auto;
+      padding:20px;
+    }
 
-  if(isExcludedHeader(nombre)) continue;
+    .topbar{
+      background:linear-gradient(135deg, #0f62fe, #1d4ed8);
+      color:#fff;
+      border-radius:24px;
+      padding:22px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
 
-  const rawVal = norm(row[i]);
-  const done = isDoneValue(rawVal);
+    .topbar h1{
+      margin:0 0 8px;
+      font-size:28px;
+      line-height:1.1;
+    }
 
-  if(done) cumplidos++;
+    .topbar p{
+      margin:0;
+      opacity:.92;
+      font-size:14px;
+    }
 
-  imperdonables.push({
-    nombre,
-    cumplido: done,
-    rawVal
-  });
-}
+    .panel{
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+      margin-bottom:16px;
+    }
+
+    .filters{
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+
+    .field label{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.4px;
+    }
+
+    .field input,
+    .field select,
+    .field button{
+      height:42px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:0 12px;
+      background:#fff;
+      font-size:14px;
+      outline:none;
+    }
+
+    .field button{
+      background:var(--primary);
+      color:#fff;
+      font-weight:700;
+      border:none;
+      cursor:pointer;
+    }
+
+    .field button:hover{
+      opacity:.92;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:14px;
+      margin-bottom:16px;
+    }
+
+    .stat{
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+
+    .stat .k{
+      color:var(--muted);
+      font-size:12px;
+      text-transform:uppercase;
+      font-weight:700;
+      letter-spacing:.4px;
+      margin-bottom:8px;
+    }
+
+    .stat .v{
+      font-size:28px;
+      font-weight:800;
+      line-height:1;
+    }
+
+    .toolbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin:10px 0 14px;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .toolbar .small{
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
+      gap:16px;
+    }
+
+    .card{
+      background:var(--card);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      padding:16px;
+      border:1px solid rgba(229,231,235,.8);
+    }
+
+    .card-head{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:12px;
+    }
+
+    .client{
+      font-size:18px;
+      font-weight:800;
+      line-height:1.2;
+      margin:0 0 4px;
+    }
+
+    .meta{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .pill{
+      min-width:74px;
+      text-align:center;
+      padding:10px 12px;
+      border-radius:16px;
+      color:#fff;
+      font-weight:800;
+      font-size:18px;
+      line-height:1;
+      box-shadow:inset 0 -2px 0 rgba(0,0,0,.08);
+    }
+
+    .pill small{
+      display:block;
+      font-size:11px;
+      margin-top:4px;
+      font-weight:700;
+      opacity:.95;
+    }
+
+    .ok{ background:var(--ok); }
+    .warn{ background:var(--warn); }
+    .bad{ background:var(--bad); }
+
+    .summary-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px;
+      margin-bottom:12px;
+    }
+
+    .mini{
+      background:#f8fafc;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+    }
+
+    .mini .t{
+      font-size:11px;
+      color:var(--muted);
+      text-transform:uppercase;
+      font-weight:700;
+      margin-bottom:6px;
+    }
+
+    .mini .n{
+      font-size:20px;
+      font-weight:800;
+    }
+
+    .section-title{
+      font-size:13px;
+      font-weight:800;
+      color:var(--text);
+      margin:14px 0 10px;
+      text-transform:uppercase;
+      letter-spacing:.4px;
+    }
+
+    .cat{
+      margin-bottom:10px;
+      padding:10px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fbfdff;
+    }
+
+    .cat-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:8px;
+    }
+
+    .cat-name{
+      font-size:14px;
+      font-weight:800;
+    }
+
+    .cat-value{
+      font-size:13px;
+      color:var(--muted);
+      font-weight:700;
+    }
+
+    .bar{
+      width:100%;
+      height:11px;
+      background:#e5e7eb;
+      border-radius:999px;
+      overflow:hidden;
+    }
+
+    .bar > span{
+      display:block;
+      height:100%;
+      border-radius:999px;
+      width:0%;
+      transition:width .35s ease;
+    }
+
+    .bar-green{ background:var(--ok); }
+    .bar-yellow{ background:var(--warn); }
+    .bar-red{ background:var(--bad); }
+
+    .empty, .loading{
+      background:var(--card);
+      border-radius:20px;
+      box-shadow:var(--shadow);
+      padding:30px;
+      text-align:center;
+      color:var(--muted);
+    }
+
+    .footer-note{
+      margin-top:18px;
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+    }
+
+    @media (max-width:1100px){
+      .filters{grid-template-columns:repeat(3,minmax(0,1fr));}
+      .stats{grid-template-columns:repeat(2,minmax(0,1fr));}
+    }
+
+    @media (max-width:720px){
+      .app{padding:12px;}
+      .filters{grid-template-columns:1fr;}
+      .stats{grid-template-columns:1fr;}
+      .summary-grid{grid-template-columns:1fr;}
+      .cards{grid-template-columns:1fr;}
+      .topbar h1{font-size:22px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <h1>Imperdonables Premium</h1>
+      <p>Seguimiento por cliente, ruta y segmento con cálculo de avance, score y semáforo.</p>
+    </div>
+
+    <div class="panel">
+      <div class="filters">
+        <div class="field">
+          <label>Buscar cliente</label>
+          <input id="searchInput" type="text" placeholder="Nombre o número de cliente" />
+        </div>
+
+        <div class="field">
+          <label>Ruta</label>
+          <select id="routeFilter">
+            <option value="">Todas</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Segmento</label>
+          <select id="segmentFilter">
+            <option value="">Todos</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Orden</label>
+          <select id="sortFilter">
+            <option value="ruta">Ruta</option>
+            <option value="score">Score</option>
+            <option value="cliente">Cliente</option>
+            <option value="cumplimiento">Cumplimiento</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Acción</label>
+          <button id="reloadBtn">Recargar</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="k">Clientes</div>
+        <div class="v" id="statClientes">0</div>
+      </div>
+      <div class="stat">
+        <div class="k">Promedio Cumplimiento</div>
+        <div class="v" id="statCumplimiento">0%</div>
+      </div>
+      <div class="stat">
+        <div class="k">Promedio Score</div>
+        <div class="v" id="statScore">0</div>
+      </div>
+      <div class="stat">
+        <div class="k">Rutas Activas</div>
+        <div class="v" id="statRutas">0</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="small" id="statusText">Esperando carga...</div>
+    </div>
+
+    <div id="content">
+      <div class="loading">Cargando datos...</div>
+    </div>
+
+    <div class="footer-note">
+      Versión estable. Si alguna hoja tiene nombres de columnas distintos, solo ajustá el bloque "COLUMNAS".
+    </div>
+  </div>
+
+  <script>
+    /******************************************************************
+     * 1) PEGÁ ACÁ TUS CSV PUBLICADOS
+     ******************************************************************/
+    const FUENTES_CSV = [
+      {
+        segmento: 'AUTOSERVICIO',
+        url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=1897406888&single=true&output=csv'
+      },
+      {
+        segmento: 'ORO',
+        url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=1674759979&single=true&output=csv'
+      }
+      // Agregá más fuentes así:
+      // { segmento:'PLATA', url:'PEGAR_CSV_AQUI' }
+    ];
+
+    /******************************************************************
+     * 2) MAPEO DE COLUMNAS
+     *    Cambiá SOLO esto si tu sheet usa otros nombres
+     ******************************************************************/
+    const COLUMNAS = {
+      numero: ['NUMERO', 'NRO_CLIENTE', 'CLIENTE_NUMERO', 'ID_CLIENTE', 'CODIGO', 'NRO'],
+      cliente: ['CLIENTE', 'RAZON_SOCIAL', 'NOMBRE_CLIENTE'],
+      ruta: ['RUTA', 'RUTA_ID'],
+      vendedor: ['VENDEDOR', 'USUARIO', 'SUPERVISOR'],
+      repositor: ['REPOSITOR', 'AGENTE', 'EJECUTOR'],
+      segmento: ['SEGMENTO', 'CANAL', 'TIPO_SEGMENTO'],
+
+      colas_obj: ['COLAS_OBJ', 'OBJ_COLAS', 'COLAS_OBJETIVO'],
+      colas_real: ['COLAS_REAL', 'REAL_COLAS', 'COLAS_CF_REAL', 'CF_REAL_COLAS'],
+
+      multi_obj: ['MULTI_OBJ', 'MULTICATEGORIA_OBJ', 'OBJ_MULTICATEGORIA', 'MULTICATEGORIAS_OBJ'],
+      multi_real: ['MULTI_REAL', 'MULTICATEGORIA_REAL', 'REAL_MULTICATEGORIA', 'MULTICATEGORIAS_REAL'],
+
+      sabores_obj: ['SABORES_OBJ', 'OBJ_SABORES'],
+      sabores_real: ['SABORES_REAL', 'REAL_SABORES'],
+
+      stills_obj: ['STILLS_OBJ', 'OBJ_STILLS'],
+      stills_real: ['STILLS_REAL', 'REAL_STILLS']
+    };
+
+    const CATEGORIAS = [
+      { key:'colas',   label:'Colas',          obj:'colas_obj',   real:'colas_real' },
+      { key:'multi',   label:'Multicategoría', obj:'multi_obj',   real:'multi_real' },
+      { key:'sabores', label:'Sabores',        obj:'sabores_obj', real:'sabores_real' },
+      { key:'stills',  label:'Stills',         obj:'stills_obj',  real:'stills_real' }
+    ];
+
+    let DATASET = [];
+
+    const $content = document.getElementById('content');
+    const $statusText = document.getElementById('statusText');
+    const $searchInput = document.getElementById('searchInput');
+    const $routeFilter = document.getElementById('routeFilter');
+    const $segmentFilter = document.getElementById('segmentFilter');
+    const $sortFilter = document.getElementById('sortFilter');
+    const $reloadBtn = document.getElementById('reloadBtn');
+
+    const $statClientes = document.getElementById('statClientes');
+    const $statCumplimiento = document.getElementById('statCumplimiento');
+    const $statScore = document.getElementById('statScore');
+    const $statRutas = document.getElementById('statRutas');
+
+    /******************************************************************
+     * Helpers
+     ******************************************************************/
+    function normalizeText(value){
+      return String(value ?? '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim()
+        .toUpperCase();
+    }
+
+    function toNumber(value){
+      if (value === null || value === undefined) return 0;
+      const cleaned = String(value)
+        .replace(/\./g, '')
+        .replace(',', '.')
+        .replace(/[^\d.-]/g, '');
+      const n = parseFloat(cleaned);
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    function pickColumn(row, aliases){
+      for (const alias of aliases) {
+        const foundKey = Object.keys(row).find(k => normalizeText(k) === normalizeText(alias));
+        if (foundKey) return row[foundKey];
+      }
+      return '';
+    }
+
+    function pct(real, obj){
+      if (!obj || obj <= 0) return 0;
+      return (real / obj) * 100;
+    }
+
+    function clamp(n, min, max){
+      return Math.max(min, Math.min(max, n));
+    }
+
+    function semaforoClass(percent){
+      if (percent >= 100) return 'ok';
+      if (percent >= 80) return 'warn';
+      return 'bad';
+    }
+
+    function barClass(percent){
+      if (percent >= 100) return 'bar-green';
+      if (percent >= 80) return 'bar-yellow';
+      return 'bar-red';
+    }
+
+    function calcPuntos(real, obj){
+      return real >= obj && obj > 0 ? 5 : 0;
+    }
+
+    function parseCSVLine(line){
+      const result = [];
+      let current = '';
+      let insideQuotes = false;
+
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        const next = line[i + 1];
+
+        if (char === '"') {
+          if (insideQuotes && next === '"') {
+            current += '"';
+            i++;
+          } else {
+            insideQuotes = !insideQuotes;
+          }
+        } else if (char === ',' && !insideQuotes) {
+          result.push(current);
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      result.push(current);
+      return result;
+    }
+
+    function csvToObjects(csvText){
+      const lines = csvText
+        .replace(/\r/g, '')
+        .split('\n')
+        .filter(line => line.trim() !== '');
+
+      if (!lines.length) return [];
+
+      const headers = parseCSVLine(lines[0]).map(h => h.trim());
+      const rows = [];
+
+      for (let i = 1; i < lines.length; i++) {
+        const cols = parseCSVLine(lines[i]);
+        const obj = {};
+        headers.forEach((h, idx) => {
+          obj[h] = cols[idx] ?? '';
+        });
+        rows.push(obj);
+      }
+
+      return rows;
+    }
+
+    function uniqueSorted(values, numeric = false){
+      const arr = [...new Set(values.filter(v => String(v).trim() !== ''))];
+      return arr.sort((a, b) => {
+        if (numeric) return Number(a) - Number(b);
+        return String(a).localeCompare(String(b), 'es');
+      });
+    }
+
+    /******************************************************************
+     * Normalización
+     ******************************************************************/
+    function normalizeRow(row, segmentoFuente){
+      const numero = pickColumn(row, COLUMNAS.numero) || '';
+      const cliente = pickColumn(row, COLUMNAS.cliente) || '';
+      const ruta = pickColumn(row, COLUMNAS.ruta) || '';
+      const vendedor = pickColumn(row, COLUMNAS.vendedor) || '';
+      const repositor = pickColumn(row, COLUMNAS.repositor) || '';
+      const segmento = pickColumn(row, COLUMNAS.segmento) || segmentoFuente || '';
+
+      const categories = CATEGORIAS.map(cat => {
+        const obj = toNumber(pickColumn(row, COLUMNAS[cat.obj]));
+        const real = toNumber(pickColumn(row, COLUMNAS[cat.real]));
+        const cumplimiento = pct(real, obj);
+        const puntos = calcPuntos(real, obj);
+        return {
+          key: cat.key,
+          label: cat.label,
+          objetivo: obj,
+          real,
+          cumplimiento,
+          puntos
+        };
+      });
+
+      const totalObjetivo = categories.reduce((sum, c) => sum + c.objetivo, 0);
+      const totalReal = categories.reduce((sum, c) => sum + c.real, 0);
+      const cumplimientoTotal = pct(totalReal, totalObjetivo);
+      const totalPuntos = categories.reduce((sum, c) => sum + c.puntos, 0);
+
+      return {
+        key: `${numero}|${cliente}|${ruta}|${segmento}`,
+        numero: String(numero).trim(),
+        cliente: String(cliente).trim(),
+        ruta: String(ruta).trim(),
+        vendedor: String(vendedor).trim(),
+        repositor: String(repositor).trim(),
+        segmento: String(segmento).trim(),
+        categories,
+        totalObjetivo,
+        totalReal,
+        cumplimientoTotal,
+        totalPuntos,
+        semaforo: semaforoClass(cumplimientoTotal)
+      };
+    }
+
+    /******************************************************************
+     * Carga
+     ******************************************************************/
+    async function fetchFuente(fuente){
+      const response = await fetch(fuente.url, { cache: 'no-store' });
+      if (!response.ok) {
+        throw new Error(`No se pudo cargar ${fuente.segmento}`);
+      }
+      const text = await response.text();
+      const rows = csvToObjects(text);
+      return rows.map(row => normalizeRow(row, fuente.segmento));
+    }
+
+    async function loadData(){
+      try{
+        $statusText.textContent = 'Cargando información...';
+        $content.innerHTML = `<div class="loading">Cargando datos...</div>`;
+
+        const results = await Promise.allSettled(FUENTES_CSV.map(fetchFuente));
+
+        const okData = [];
+        const errores = [];
+
+        results.forEach((r, idx) => {
+          if (r.status === 'fulfilled') {
+            okData.push(...r.value);
+          } else {
+            errores.push(FUENTES_CSV[idx]?.segmento || `Fuente ${idx + 1}`);
+            console.error(r.reason);
+          }
+        });
+
+        DATASET = okData.filter(item => item.cliente || item.numero);
+
+        fillFilters(DATASET);
+        render();
+
+        if (!DATASET.length) {
+          $statusText.textContent = 'No se encontraron datos.';
+        } else if (errores.length) {
+          $statusText.textContent = `Datos cargados con advertencias. Falló: ${errores.join(', ')}.`;
+        } else {
+          $statusText.textContent = `Datos cargados correctamente: ${DATASET.length} clientes.`;
+        }
+
+      } catch(error){
+        console.error(error);
+        $statusText.textContent = 'Error al cargar datos.';
+        $content.innerHTML = `<div class="empty">No se pudieron cargar los datos. Revisá los links CSV publicados.</div>`;
+      }
+    }
+
+    /******************************************************************
+     * Filtros
+     ******************************************************************/
+    function fillFilters(data){
+      const rutas = uniqueSorted(data.map(d => d.ruta), true);
+      const segmentos = uniqueSorted(data.map(d => d.segmento));
+
+      $routeFilter.innerHTML = `<option value="">Todas</option>` +
+        rutas.map(r => `<option value="${escapeHtml(r)}">${escapeHtml(r)}</option>`).join('');
+
+      $segmentFilter.innerHTML = `<option value="">Todos</option>` +
+        segmentos.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(s)}</option>`).join('');
+    }
+
+    function getFilteredData(){
+      const q = normalizeText($searchInput.value);
+      const ruta = normalizeText($routeFilter.value);
+      const segmento = normalizeText($segmentFilter.value);
+      const sortBy = $sortFilter.value;
+
+      let data = [...DATASET].filter(item => {
+        const matchQuery =
+          !q ||
+          normalizeText(item.cliente).includes(q) ||
+          normalizeText(item.numero).includes(q);
+
+        const matchRuta = !ruta || normalizeText(item.ruta) === ruta;
+        const matchSegmento = !segmento || normalizeText(item.segmento) === segmento;
+
+        return matchQuery && matchRuta && matchSegmento;
+      });
+
+      data.sort((a,b) => {
+        if (sortBy === 'score') return b.totalPuntos - a.totalPuntos;
+        if (sortBy === 'cumplimiento') return b.cumplimientoTotal - a.cumplimientoTotal;
+        if (sortBy === 'cliente') return a.cliente.localeCompare(b.cliente, 'es');
+        return (Number(a.ruta) || 0) - (Number(b.ruta) || 0) || a.cliente.localeCompare(b.cliente, 'es');
+      });
+
+      return data;
+    }
+
+    /******************************************************************
+     * Render
+     ******************************************************************/
+    function render(){
+      const data = getFilteredData();
+      renderStats(data);
+
+      if (!data.length) {
+        $content.innerHTML = `<div class="empty">No hay clientes para los filtros seleccionados.</div>`;
+        return;
+      }
+
+      $content.innerHTML = `
+        <div class="cards">
+          ${data.map(renderCard).join('')}
+        </div>
+      `;
+    }
+
+    function renderStats(data){
+      const clientes = data.length;
+      const promedioCumplimiento = clientes
+        ? data.reduce((s, d) => s + d.cumplimientoTotal, 0) / clientes
+        : 0;
+      const promedioScore = clientes
+        ? data.reduce((s, d) => s + d.totalPuntos, 0) / clientes
+        : 0;
+      const rutas = new Set(data.map(d => d.ruta).filter(Boolean)).size;
+
+      $statClientes.textContent = clientes;
+      $statCumplimiento.textContent = `${Math.round(promedioCumplimiento)}%`;
+      $statScore.textContent = promedioScore.toFixed(1);
+      $statRutas.textContent = rutas;
+    }
+
+    function renderCard(item){
+      const pillClass = item.semaforo;
+      return `
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="client">${escapeHtml(item.cliente || 'Sin nombre')}</div>
+              <div class="meta">
+                Cliente: <strong>${escapeHtml(item.numero || '-')}</strong><br>
+                Ruta: <strong>${escapeHtml(item.ruta || '-')}</strong> |
+                Segmento: <strong>${escapeHtml(item.segmento || '-')}</strong><br>
+                Vendedor: <strong>${escapeHtml(item.vendedor || '-')}</strong><br>
+                Repositor: <strong>${escapeHtml(item.repositor || '-')}</strong>
+              </div>
+            </div>
+
+            <div class="pill ${pillClass}">
+              ${item.totalPuntos}
+              <small>Score</small>
+            </div>
+          </div>
+
+          <div class="summary-grid">
+            <div class="mini">
+              <div class="t">Objetivo Total</div>
+              <div class="n">${formatNum(item.totalObjetivo)}</div>
+            </div>
+            <div class="mini">
+              <div class="t">Real Total</div>
+              <div class="n">${formatNum(item.totalReal)}</div>
+            </div>
+            <div class="mini">
+              <div class="t">Cumplimiento</div>
+              <div class="n">${Math.round(item.cumplimientoTotal)}%</div>
+            </div>
+          </div>
+
+          <div class="section-title">Detalle por categoría</div>
+          ${item.categories.map(renderCategory).join('')}
+        </div>
+      `;
+    }
+
+    function renderCategory(cat){
+      const percent = clamp(cat.cumplimiento, 0, 999);
+      const width = clamp(percent, 0, 100);
+      return `
+        <div class="cat">
+          <div class="cat-top">
+            <div class="cat-name">${escapeHtml(cat.label)}</div>
+            <div class="cat-value">
+              Real ${formatNum(cat.real)} / Obj ${formatNum(cat.objetivo)} ·
+              ${Math.round(percent)}% ·
+              ${cat.puntos} pts
+            </div>
+          </div>
+          <div class="bar">
+            <span class="${barClass(percent)}" style="width:${width}%"></span>
+          </div>
+        </div>
+      `;
+    }
+
+    function formatNum(n){
+      return Number(n || 0).toLocaleString('es-AR', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function escapeHtml(value){
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    /******************************************************************
+     * Eventos
+     ******************************************************************/
+    $searchInput.addEventListener('input', render);
+    $routeFilter.addEventListener('change', render);
+    $segmentFilter.addEventListener('change', render);
+    $sortFilter.addEventListener('change', render);
+    $reloadBtn.addEventListener('click', loadData);
+
+    /******************************************************************
+     * Init
+     ******************************************************************/
+    loadData();
+  </script>
+</body>
+</html>
