@@ -16,6 +16,10 @@
       --ok:#22c55e;
       --mid:#f59e0b;
       --bad:#ef4444;
+      --blue:#2563eb;
+      --blueSoft:rgba(37,99,235,.18);
+      --blueBorder:rgba(96,165,250,.70);
+      --blueGlow:rgba(59,130,246,.30);
     }
     *{
       box-sizing:border-box;
@@ -49,6 +53,10 @@
       border-radius:16px;
       padding:10px 14px;
       font-weight:800;
+      transition:.18s ease;
+    }
+    .btn:active{
+      transform:scale(.98);
     }
     .hidden-view{
       display:none !important;
@@ -65,6 +73,79 @@
     .scroll-soft::-webkit-scrollbar-thumb{
       background:#334155;
       border-radius:999px;
+    }
+
+    /* FILTROS PRO */
+    .filters-shell{
+      position:sticky;
+      top:96px;
+      z-index:15;
+      background:rgba(7,17,31,.95);
+    }
+    .filter-control{
+      width:100%;
+      height:48px;
+      border-radius:16px;
+      background:linear-gradient(180deg, rgba(37,99,235,.22), rgba(37,99,235,.14));
+      border:1px solid var(--blueBorder);
+      color:var(--text);
+      padding:0 14px;
+      outline:none;
+      font-size:14px;
+      font-weight:700;
+      box-shadow:0 0 0 1px rgba(37,99,235,.10) inset;
+      transition:.18s ease;
+    }
+    .filter-control:focus{
+      border-color:#93c5fd;
+      box-shadow:0 0 0 3px var(--blueGlow);
+    }
+    .filter-control option{
+      background:#0f172a;
+      color:#ebf2ff;
+    }
+    .filter-label{
+      font-size:11px;
+      color:#93c5fd;
+      margin-bottom:6px;
+      display:block;
+      font-weight:800;
+      letter-spacing:.03em;
+      text-transform:uppercase;
+    }
+    .search-pro{
+      width:100%;
+      height:48px;
+      border-radius:16px;
+      background:linear-gradient(180deg, rgba(37,99,235,.18), rgba(2,6,23,.45));
+      border:1px solid var(--blueBorder);
+      color:var(--text);
+      padding:0 16px;
+      outline:none;
+      font-size:16px;
+      transition:.18s ease;
+    }
+    .search-pro::placeholder{
+      color:#94a3b8;
+    }
+    .search-pro:focus{
+      border-color:#93c5fd;
+      box-shadow:0 0 0 3px var(--blueGlow);
+    }
+    .btn-primary-blue{
+      background:linear-gradient(180deg,#3b82f6,#2563eb);
+      color:white;
+      border:1px solid rgba(147,197,253,.35);
+      box-shadow:0 10px 22px rgba(37,99,235,.24);
+    }
+    .btn-secondary-blue{
+      background:rgba(37,99,235,.14);
+      color:#dbeafe;
+      border:1px solid rgba(96,165,250,.35);
+    }
+    .btn-secondary-blue:active,
+    .btn-primary-blue:active{
+      transform:scale(.98);
     }
   </style>
 </head>
@@ -100,31 +181,56 @@
       </div>
     </section>
 
-    <section class="glass rounded-[28px] p-4 mt-3">
-      <label class="text-[11px] text-slate-400 block mb-1">Buscar</label>
+    <section class="glass rounded-[28px] p-4 mt-3 filters-shell">
+      <div class="flex items-center justify-between mb-3">
+        <div>
+          <div class="text-sm font-black text-blue-300">Filtros</div>
+          <div class="text-xs text-slate-400">Visualización rápida y comercial</div>
+        </div>
+        <div class="text-[11px] px-2 py-1 rounded-full bg-blue-500/15 border border-blue-400/30 text-blue-200 font-bold">
+          Activos
+        </div>
+      </div>
+
+      <label class="filter-label">Buscar</label>
       <input
         id="searchInput"
         type="text"
         placeholder="Cliente, Outnum, Ruta, Jefe"
-        class="w-full h-12 rounded-2xl bg-slate-950/50 border border-slate-700 px-4 outline-none focus:border-cyan-400 text-base"
+        class="search-pro"
       />
 
       <div class="grid grid-cols-2 gap-2 mt-3">
-        <select id="segmentoFilter" class="h-12 rounded-2xl bg-slate-950/50 border border-slate-700 px-3 text-sm outline-none focus:border-cyan-400"></select>
-        <select id="rutaFilter" class="h-12 rounded-2xl bg-slate-950/50 border border-slate-700 px-3 text-sm outline-none focus:border-cyan-400"></select>
-        <select id="jefeFilter" class="h-12 rounded-2xl bg-slate-950/50 border border-slate-700 px-3 text-sm outline-none focus:border-cyan-400"></select>
-        <select id="estadoFilter" class="h-12 rounded-2xl bg-slate-950/50 border border-slate-700 px-3 text-sm outline-none focus:border-cyan-400">
-          <option value="TODOS">Todos los estados</option>
-          <option value="ALTO">Alto</option>
-          <option value="MEDIO">Medio</option>
-          <option value="BAJO">Bajo</option>
-        </select>
+        <div>
+          <label class="filter-label">Segmento</label>
+          <select id="segmentoFilter" class="filter-control"></select>
+        </div>
+
+        <div>
+          <label class="filter-label">Ruta</label>
+          <select id="rutaFilter" class="filter-control"></select>
+        </div>
+
+        <div>
+          <label class="filter-label">Jefe</label>
+          <select id="jefeFilter" class="filter-control"></select>
+        </div>
+
+        <div>
+          <label class="filter-label">Estado</label>
+          <select id="estadoFilter" class="filter-control">
+            <option value="TODOS">Todos los estados</option>
+            <option value="ALTO">Alto</option>
+            <option value="MEDIO">Medio</option>
+            <option value="BAJO">Bajo</option>
+          </select>
+        </div>
       </div>
 
       <div class="grid grid-cols-3 gap-2 mt-3">
-        <button id="tabClientes" class="btn bg-cyan-400 text-slate-950">Clientes</button>
-        <button id="tabDetalle" class="btn chip">Detalle</button>
-        <button id="reloadBtn" class="btn chip">Recargar</button>
+        <button id="tabClientes" class="btn btn-primary-blue">Clientes</button>
+        <button id="tabDetalle" class="btn btn-secondary-blue">Detalle</button>
+        <button id="reloadBtn" class="btn btn-secondary-blue">Recargar</button>
       </div>
     </section>
 
@@ -155,7 +261,6 @@
         { segmento: 'BRONCE',       url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=1006300389&single=true&output=csv' }
       ],
       headerAliases: {
-        // 'Nombre real del Excel': 'Nombre visible en la app'
       }
     };
 
@@ -302,7 +407,6 @@
 
       if (outclIdx === -1) return [];
 
-      // BI: las columnas válidas llegan hasta "Total", pero "Total" NO se cuenta como imperdonable
       const totalIdx = findColumnIndex(displayHeaderTop, displayHeaderBottom, 'Total');
       const dynamicStart = outclIdx + 1;
       const dynamicEndExclusive = totalIdx > -1 ? totalIdx : metaHeaderRow.length;
@@ -337,7 +441,6 @@
           const nombre = getImperdonableName(displayHeaderTop, displayHeaderBottom, i);
           const rawVal = norm(row[i]);
 
-          // Solo toma valores tipo BI
           if (!isBiBooleanValue(rawVal)) continue;
 
           totalValidos++;
@@ -627,15 +730,15 @@
     function showClientes(){
       document.getElementById('clientesView').classList.remove('hidden-view');
       document.getElementById('detalleView').classList.add('hidden-view');
-      document.getElementById('tabClientes').className = 'btn bg-cyan-400 text-slate-950';
-      document.getElementById('tabDetalle').className = 'btn chip';
+      document.getElementById('tabClientes').className = 'btn btn-primary-blue';
+      document.getElementById('tabDetalle').className = 'btn btn-secondary-blue';
     }
 
     function showDetalle(){
       document.getElementById('clientesView').classList.add('hidden-view');
       document.getElementById('detalleView').classList.remove('hidden-view');
-      document.getElementById('tabDetalle').className = 'btn bg-cyan-400 text-slate-950';
-      document.getElementById('tabClientes').className = 'btn chip';
+      document.getElementById('tabDetalle').className = 'btn btn-primary-blue';
+      document.getElementById('tabClientes').className = 'btn btn-secondary-blue';
     }
 
     document.getElementById('tabClientes').addEventListener('click', showClientes);
