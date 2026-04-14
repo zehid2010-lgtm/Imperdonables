@@ -12,15 +12,7 @@
     :root{
       --bg:#07111f;
       --bg2:#0f172a;
-      --card:#111c31;
-      --line:#24324a;
       --text:#ebf2ff;
-      --muted:#94a3b8;
-      --ok:#22c55e;
-      --mid:#f59e0b;
-      --bad:#ef4444;
-      --blue:#2563eb;
-      --blueSoft:rgba(37,99,235,.18);
       --blueBorder:rgba(96,165,250,.70);
       --blueGlow:rgba(59,130,246,.30);
     }
@@ -36,14 +28,13 @@
       background:linear-gradient(180deg,var(--bg),var(--bg2));
       color:var(--text);
       font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;
-      scroll-behavior:smooth;
     }
 
     .app-shell{
       max-width:560px;
       margin:0 auto;
       min-height:100vh;
-      padding:10px 10px 90px;
+      padding:8px 10px 90px;
     }
 
     .glass{
@@ -94,54 +85,20 @@
       position:sticky;
       top:0;
       z-index:20;
-      background:rgba(7,17,31,.92);
-      transition:all .22s ease;
-    }
-
-    .top-hero.compact{
-      padding:10px !important;
-    }
-
-    .top-hero.compact .hero-logo{
-      height:42px !important;
-      width:42px !important;
-      border-radius:14px !important;
-      font-size:18px !important;
-    }
-
-    .top-hero.compact .hero-kpis{
-      gap:6px !important;
-      margin-top:10px !important;
-    }
-
-    .top-hero.compact .hero-kpis .chip{
-      padding:10px !important;
-    }
-
-    .top-hero.compact h1{
-      font-size:1.08rem !important;
-    }
-
-    .top-hero.compact .hero-sub{
-      display:none;
+      background:rgba(7,17,31,.96);
     }
 
     .filters-shell{
       position:sticky;
-      top:74px;
-      z-index:15;
-      background:rgba(7,17,31,.96);
-      transition:all .22s ease;
-    }
-
-    .filters-shell.compact{
-      top:62px;
-      padding:12px !important;
+      top:138px;
+      z-index:19;
+      background:rgba(7,17,31,.98);
+      margin-top:0;
     }
 
     .filter-control{
       width:100%;
-      height:44px;
+      height:42px;
       border-radius:14px;
       background:linear-gradient(180deg, rgba(37,99,235,.22), rgba(37,99,235,.14));
       border:1px solid var(--blueBorder);
@@ -151,7 +108,6 @@
       font-size:14px;
       font-weight:700;
       box-shadow:0 0 0 1px rgba(37,99,235,.10) inset;
-      transition:.18s ease;
     }
 
     .filter-control:focus{
@@ -176,7 +132,7 @@
 
     .search-pro{
       width:100%;
-      height:44px;
+      height:42px;
       border-radius:14px;
       background:linear-gradient(180deg, rgba(37,99,235,.18), rgba(2,6,23,.45));
       border:1px solid var(--blueBorder);
@@ -184,7 +140,6 @@
       padding:0 14px;
       outline:none;
       font-size:15px;
-      transition:.18s ease;
     }
 
     .search-pro::placeholder{
@@ -209,11 +164,6 @@
       border:1px solid rgba(96,165,250,.35);
     }
 
-    .btn-secondary-blue:active,
-    .btn-primary-blue:active{
-      transform:scale(.98);
-    }
-
     #clientesView{
       margin-top:8px !important;
     }
@@ -223,7 +173,7 @@
     }
 
     .client-card{
-      scroll-margin-top:140px;
+      scroll-margin-top:210px;
     }
 
     .client-card-active{
@@ -232,14 +182,15 @@
     }
 
     .kpi-value{
-      font-size:1.85rem;
+      font-size:1.45rem;
       line-height:1;
       font-weight:900;
       margin-top:4px;
     }
 
     .hero-kpis .chip{
-      min-height:84px;
+      min-height:68px;
+      padding:10px !important;
     }
 
     .mini-progress{
@@ -248,48 +199,44 @@
       background:rgba(255,255,255,.10);
       overflow:hidden;
     }
-
-    .section-title-tight{
-      margin-bottom:2px;
-    }
   </style>
 </head>
 <body>
   <div class="app-shell">
-    <section id="heroCard" class="glass rounded-[24px] p-3 top-hero">
+    <section id="heroCard" class="glass rounded-[22px] p-3 top-hero">
       <div class="flex items-center gap-3">
-        <div class="hero-logo h-11 w-11 rounded-2xl bg-cyan-400 flex items-center justify-center text-slate-950 text-lg font-black">I</div>
+        <div class="h-10 w-10 rounded-2xl bg-cyan-400 flex items-center justify-center text-slate-950 text-base font-black">I</div>
         <div class="min-w-0">
-          <div class="text-[11px] uppercase tracking-[0.2em] text-slate-400">Mobile Pro</div>
-          <h1 class="text-[1.20rem] font-black leading-tight">Imperdonables</h1>
-          <p class="hero-sub text-xs text-slate-400">Vista optimizada para celular</p>
+          <div class="text-[10px] uppercase tracking-[0.2em] text-slate-400">Mobile Pro</div>
+          <h1 class="text-[1.08rem] font-black leading-tight">Imperdonables</h1>
+          <p class="text-[11px] text-slate-400">Vista optimizada para celular</p>
         </div>
       </div>
 
-      <div class="hero-kpis grid grid-cols-2 gap-2 mt-3">
-        <div class="chip rounded-2xl p-3">
-          <div class="text-[11px] text-slate-400">Clientes</div>
+      <div class="hero-kpis grid grid-cols-2 gap-2 mt-2">
+        <div class="chip rounded-2xl">
+          <div class="text-[10px] text-slate-400">Clientes</div>
           <div id="kpiClientes" class="kpi-value">0</div>
         </div>
-        <div class="chip rounded-2xl p-3">
-          <div class="text-[11px] text-slate-400">Avance</div>
+        <div class="chip rounded-2xl">
+          <div class="text-[10px] text-slate-400">Avance</div>
           <div id="kpiAvance" class="kpi-value">0,0%</div>
         </div>
-        <div class="chip rounded-2xl p-3">
-          <div class="text-[11px] text-slate-400">Imperdonables</div>
+        <div class="chip rounded-2xl">
+          <div class="text-[10px] text-slate-400">Imperdonables</div>
           <div id="kpiImperdonables" class="kpi-value">0</div>
         </div>
-        <div class="chip rounded-2xl p-3">
-          <div class="text-[11px] text-slate-400">Cumplidos</div>
+        <div class="chip rounded-2xl">
+          <div class="text-[10px] text-slate-400">Cumplidos</div>
           <div id="kpiCumplidos" class="kpi-value">0</div>
         </div>
       </div>
     </section>
 
-    <section id="filtersCard" class="glass rounded-[24px] p-3 mt-2 filters-shell">
+    <section id="filtersCard" class="glass rounded-[22px] p-3 filters-shell">
       <div class="flex items-center justify-between mb-2">
         <div>
-          <div class="text-sm font-black text-blue-300 section-title-tight">Filtros</div>
+          <div class="text-sm font-black text-blue-300">Filtros</div>
           <div class="text-[11px] text-slate-400">Visualización rápida y comercial</div>
         </div>
         <div class="text-[11px] px-2 py-1 rounded-full bg-blue-500/15 border border-blue-400/30 text-blue-200 font-bold">
@@ -372,13 +319,8 @@
     let filteredData = [];
     let selectedKey = null;
 
-    function norm(v){
-      return String(v ?? '').trim();
-    }
-
-    function normUpper(v){
-      return norm(v).toUpperCase();
-    }
+    function norm(v){ return String(v ?? '').trim(); }
+    function normUpper(v){ return norm(v).toUpperCase(); }
 
     function pct(n, d){
       if (!d || d <= 0) return 0;
@@ -485,8 +427,7 @@
     function getImperdonableName(top, bottom, idx){
       const a = norm(top[idx]);
       const b = norm(bottom[idx]);
-      const joined = [a, b].filter(Boolean).join(' ').trim();
-      return joined || `Imperdonable ${idx + 1}`;
+      return [a, b].filter(Boolean).join(' ').trim() || `Imperdonable ${idx + 1}`;
     }
 
     function buildClientRecords(rows, segmento){
@@ -548,15 +489,10 @@
           if (!isBiBooleanValue(rawVal)) continue;
 
           totalValidos++;
-
           const done = isDoneValue(rawVal);
           if (done) cumplidos++;
 
-          imperdonables.push({
-            nombre,
-            cumplido: done,
-            rawVal
-          });
+          imperdonables.push({ nombre, cumplido: done, rawVal });
         }
 
         clients.push({
@@ -610,10 +546,7 @@
       populateFilters();
       applyFilters();
 
-      if (filteredData.length && !selectedKey) {
-        selectedKey = filteredData[0].key;
-      }
-
+      if (filteredData.length && !selectedKey) selectedKey = filteredData[0].key;
       renderDetail();
 
       if (!rawData.length) {
@@ -647,24 +580,19 @@
 
       filteredData = rawData.filter(item => {
         const textHit = !q || [
-          item.cliente,
-          item.outnum,
-          item.ruta,
-          item.jefe,
-          item.segmento,
-          item.detalle,
-          item.territorio,
-          item.cedi
+          item.cliente, item.outnum, item.ruta, item.jefe,
+          item.segmento, item.detalle, item.territorio, item.cedi
         ].some(v => normUpper(v).includes(q));
 
-        const segmentoHit = segmento === 'TODOS' || item.segmento === segmento;
-        const rutaHit = ruta === 'TODOS' || item.ruta === ruta;
-        const jefeHit = jefe === 'TODOS' || item.jefe === jefe;
-        const estadoHit = estado === 'TODOS' || getTextState(item.porcentaje) === estado;
-
-        return textHit && segmentoHit && rutaHit && jefeHit && estadoHit;
+        return (segmento === 'TODOS' || item.segmento === segmento) &&
+               (ruta === 'TODOS' || item.ruta === ruta) &&
+               (jefe === 'TODOS' || item.jefe === jefe) &&
+               (estado === 'TODOS' || getTextState(item.porcentaje) === estado) &&
+               textHit;
       }).sort((a, b) => {
-        if (String(a.ruta) !== String(b.ruta)) return String(a.ruta).localeCompare(String(b.ruta), 'es', { numeric:true });
+        if (String(a.ruta) !== String(b.ruta)) {
+          return String(a.ruta).localeCompare(String(b.ruta), 'es', { numeric:true });
+        }
         return String(a.cliente).localeCompare(String(b.cliente), 'es');
       });
 
@@ -845,19 +773,6 @@
       document.getElementById('tabClientes').className = 'btn btn-secondary-blue';
     }
 
-    function handleScrollCompact(){
-      const hero = document.getElementById('heroCard');
-      const filters = document.getElementById('filtersCard');
-
-      if (window.scrollY > 45) {
-        hero.classList.add('compact');
-        filters.classList.add('compact');
-      } else {
-        hero.classList.remove('compact');
-        filters.classList.remove('compact');
-      }
-    }
-
     document.getElementById('tabClientes').addEventListener('click', showClientes);
     document.getElementById('tabDetalle').addEventListener('click', showDetalle);
     document.getElementById('searchInput').addEventListener('input', applyFilters);
@@ -866,7 +781,6 @@
     document.getElementById('jefeFilter').addEventListener('change', applyFilters);
     document.getElementById('estadoFilter').addEventListener('change', applyFilters);
     document.getElementById('reloadBtn').addEventListener('click', loadData);
-    window.addEventListener('scroll', handleScrollCompact, { passive:true });
 
     loadData();
   </script>
