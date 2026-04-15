@@ -42,8 +42,8 @@
       height:100vh;
       display:flex;
       flex-direction:column;
-      padding:10px 10px 10px;
-      gap:8px;
+      padding:6px 8px 8px;
+      gap:6px;
     }
 
     .glass{
@@ -59,12 +59,13 @@
     }
 
     .btn{
-      min-height:38px;
+      min-height:34px;
+      height:34px;
       border-radius:14px;
-      padding:8px 10px;
+      padding:6px 10px;
       font-weight:800;
       transition:.18s ease;
-      font-size:13px;
+      font-size:12px;
     }
 
     .btn:active{
@@ -96,32 +97,31 @@
       border-radius:999px;
     }
 
-    /* BLOQUE SUPERIOR TOTALMENTE FIJO */
     .top-fixed{
       flex:0 0 auto;
     }
 
     .top-hero{
       background:rgba(7,17,31,.98);
-      padding:10px 10px 6px;
+      padding:8px 8px 4px;
     }
 
     .filters-shell{
       background:rgba(7,17,31,.99);
       margin-top:0;
-      padding:10px;
+      padding:8px;
     }
 
     .filter-control{
       width:100%;
-      height:36px;
+      height:32px;
       border-radius:12px;
       background:linear-gradient(180deg, rgba(37,99,235,.22), rgba(37,99,235,.14));
       border:1px solid var(--blueBorder);
       color:var(--text);
       padding:0 10px;
       outline:none;
-      font-size:13px;
+      font-size:12px;
       font-weight:700;
       box-shadow:0 0 0 1px rgba(37,99,235,.10) inset;
     }
@@ -139,23 +139,24 @@
     .filter-label{
       font-size:10px;
       color:#93c5fd;
-      margin-bottom:4px;
+      margin-bottom:3px;
       display:block;
       font-weight:800;
-      letter-spacing:.03em;
+      letter-spacing:.02em;
       text-transform:uppercase;
+      line-height:1;
     }
 
     .search-pro{
       width:100%;
-      height:36px;
+      height:32px;
       border-radius:12px;
       background:linear-gradient(180deg, rgba(37,99,235,.18), rgba(2,6,23,.45));
       border:1px solid var(--blueBorder);
       color:var(--text);
       padding:0 12px;
       outline:none;
-      font-size:14px;
+      font-size:12px;
     }
 
     .search-pro::placeholder{
@@ -181,24 +182,34 @@
     }
 
     .kpi-value{
-      font-size:1.2rem;
+      font-size:1rem;
       line-height:1;
       font-weight:900;
-      margin-top:4px;
+      margin-top:3px;
+    }
+
+    .hero-kpis{
+      gap:6px !important;
+      margin-top:8px !important;
     }
 
     .hero-kpis .chip{
-      min-height:58px;
-      padding:8px !important;
+      min-height:50px;
+      padding:7px 9px !important;
+      border-radius:16px;
     }
 
-    /* SOLO ESTA ZONA SCROLLEA */
+    .hero-kpis .chip .text-\[10px\]{
+      font-size:9px !important;
+    }
+
     .content-area{
       flex:1 1 auto;
       min-height:0;
       display:flex;
       flex-direction:column;
       overflow:hidden;
+      margin-top:-2px;
     }
 
     #clientesView,
@@ -211,19 +222,20 @@
 
     .list-head{
       flex:0 0 auto;
-      padding:0 4px 6px;
+      padding:0 4px 4px;
     }
 
     #cardsContainer{
       flex:1 1 auto;
       min-height:0;
       overflow:auto;
-      padding:2px 0 8px;
+      padding:0 0 8px;
     }
 
     .client-card{
-      padding:12px !important;
-      margin-bottom:8px;
+      padding:10px !important;
+      margin-bottom:6px;
+      border-radius:18px !important;
     }
 
     .client-card-active{
@@ -232,7 +244,7 @@
     }
 
     .mini-progress{
-      height:9px;
+      height:8px;
       border-radius:999px;
       background:rgba(255,255,255,.10);
       overflow:hidden;
@@ -244,6 +256,67 @@
       overflow:auto;
       padding-right:2px;
     }
+
+    .top-hero .title-main{
+      font-size:0.95rem;
+      line-height:1.05;
+    }
+
+    .top-hero .title-sub{
+      font-size:10px;
+      line-height:1.1;
+    }
+
+    .top-hero .brand-top{
+      font-size:9px;
+      letter-spacing:.18em;
+      line-height:1;
+    }
+
+    .top-hero .logo-box{
+      height:38px;
+      width:38px;
+      border-radius:16px;
+      font-size:15px;
+    }
+
+    .filters-header-title{
+      font-size:13px;
+      line-height:1;
+    }
+
+    .filters-header-sub{
+      font-size:10px;
+      line-height:1.1;
+      margin-top:2px;
+    }
+
+    .badge-activos{
+      font-size:10px;
+      padding:5px 9px;
+      line-height:1;
+    }
+
+    .filters-grid{
+      gap:8px !important;
+      margin-top:8px !important;
+    }
+
+    .btn-grid{
+      gap:8px !important;
+      margin-top:8px !important;
+    }
+
+    .section-title{
+      font-size:13px;
+      line-height:1;
+    }
+
+    .section-subtitle{
+      font-size:11px;
+      line-height:1.1;
+      margin-top:2px;
+    }
   </style>
 </head>
 <body>
@@ -251,28 +324,28 @@
     <div class="top-fixed">
       <section id="heroCard" class="glass rounded-[22px] p-3 top-hero">
         <div class="flex items-center gap-3">
-          <div class="h-10 w-10 rounded-2xl bg-cyan-400 flex items-center justify-center text-slate-950 text-base font-black">I</div>
+          <div class="logo-box bg-cyan-400 flex items-center justify-center text-slate-950 font-black">I</div>
           <div class="min-w-0">
-            <div class="text-[10px] uppercase tracking-[0.2em] text-slate-400">Mobile Pro</div>
-            <h1 class="text-[1.02rem] font-black leading-tight">Imperdonables</h1>
-            <p class="text-[10px] text-slate-400">Vista optimizada para celular</p>
+            <div class="brand-top uppercase text-slate-400">Mobile Pro</div>
+            <h1 class="title-main font-black">Imperdonables</h1>
+            <p class="title-sub text-slate-400">Vista optimizada para celular</p>
           </div>
         </div>
 
-        <div class="hero-kpis grid grid-cols-2 gap-2 mt-2">
-          <div class="chip rounded-2xl">
+        <div class="hero-kpis grid grid-cols-2">
+          <div class="chip">
             <div class="text-[10px] text-slate-400">Clientes</div>
             <div id="kpiClientes" class="kpi-value">0</div>
           </div>
-          <div class="chip rounded-2xl">
+          <div class="chip">
             <div class="text-[10px] text-slate-400">Avance</div>
             <div id="kpiAvance" class="kpi-value">0,0%</div>
           </div>
-          <div class="chip rounded-2xl">
+          <div class="chip">
             <div class="text-[10px] text-slate-400">Imperdonables</div>
             <div id="kpiImperdonables" class="kpi-value">0</div>
           </div>
-          <div class="chip rounded-2xl">
+          <div class="chip">
             <div class="text-[10px] text-slate-400">Cumplidos</div>
             <div id="kpiCumplidos" class="kpi-value">0</div>
           </div>
@@ -282,10 +355,10 @@
       <section id="filtersCard" class="glass rounded-[22px] p-3 filters-shell">
         <div class="flex items-center justify-between mb-2">
           <div>
-            <div class="text-sm font-black text-blue-300">Filtros</div>
-            <div class="text-[10px] text-slate-400">Visualización rápida y comercial</div>
+            <div class="filters-header-title font-black text-blue-300">Filtros</div>
+            <div class="filters-header-sub text-slate-400">Visualización rápida y comercial</div>
           </div>
-          <div class="text-[10px] px-2 py-1 rounded-full bg-blue-500/15 border border-blue-400/30 text-blue-200 font-bold">
+          <div class="badge-activos rounded-full bg-blue-500/15 border border-blue-400/30 text-blue-200 font-bold">
             Activos
           </div>
         </div>
@@ -298,7 +371,7 @@
           class="search-pro"
         />
 
-        <div class="grid grid-cols-2 gap-2 mt-2">
+        <div class="filters-grid grid grid-cols-2">
           <div>
             <label class="filter-label">Segmento</label>
             <select id="segmentoFilter" class="filter-control"></select>
@@ -325,7 +398,7 @@
           </div>
         </div>
 
-        <div class="grid grid-cols-3 gap-2 mt-2">
+        <div class="btn-grid grid grid-cols-3">
           <button id="tabClientes" class="btn btn-primary-blue">Clientes</button>
           <button id="tabDetalle" class="btn btn-secondary-blue">Detalle</button>
           <button id="reloadBtn" class="btn btn-secondary-blue">Recargar</button>
@@ -336,8 +409,8 @@
     <div class="content-area">
       <section id="clientesView">
         <div class="list-head">
-          <div class="text-sm font-black">Listado</div>
-          <div id="resultInfo" class="text-xs text-slate-400">Cargando datos...</div>
+          <div class="section-title font-black">Listado</div>
+          <div id="resultInfo" class="section-subtitle text-slate-400">Cargando datos...</div>
         </div>
         <div id="cardsContainer" class="scroll-soft"></div>
       </section>
@@ -680,15 +753,15 @@
         const safeKey = item.key.replace(/'/g, "\\'");
 
         return `
-          <button onclick="selectClient('${safeKey}')" class="client-card glass w-full rounded-[22px] p-4 text-left border ${activeClass}">
+          <button onclick="selectClient('${safeKey}')" class="client-card glass w-full text-left border ${activeClass}">
             <div class="flex items-start justify-between gap-3">
               <div class="min-w-0 flex-1">
                 <div class="text-[10px] text-slate-400 uppercase tracking-wide">${esc(item.segmento)} · Ruta ${esc(item.ruta || '-')}</div>
-                <div class="font-black text-[17px] leading-tight mt-1">${esc(item.cliente || '-')}</div>
+                <div class="font-black text-[16px] leading-tight mt-1">${esc(item.cliente || '-')}</div>
                 <div class="text-[11px] text-slate-300 mt-1 line-clamp-1">Outnum ${esc(item.outnum || '-')} · ${esc(item.jefe || '-')}</div>
                 <div class="text-[10px] text-slate-500 mt-1 line-clamp-1">${esc(item.detalle || '-')} · ${esc(item.territorio || '-')}</div>
               </div>
-              <div class="shrink-0 rounded-2xl px-3 py-2 ${barColor} text-slate-950 font-black text-[13px]">${formatPct(item.porcentaje)}</div>
+              <div class="shrink-0 rounded-2xl px-3 py-2 ${barColor} text-slate-950 font-black text-[12px]">${formatPct(item.porcentaje)}</div>
             </div>
 
             <div class="grid grid-cols-3 gap-2 mt-3">
