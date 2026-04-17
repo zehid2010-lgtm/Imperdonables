@@ -463,7 +463,7 @@
 
     function uniq(values){
       return [...new Set(values.filter(Boolean))]
-        .sort((a,b) => String(a).localeCompare(String(b), 'es'));
+        .sort((a,b) => String(a).localeCompare(String(b), 'es', { numeric:true }));
     }
 
     function getDisplayName(name){
@@ -686,9 +686,54 @@
     }
 
     function populateFilters(){
-      fillSelect(document.getElementById('segmentoFilter'), uniq(rawData.map(x => x.segmento)), 'Todos los segmentos');
-      fillSelect(document.getElementById('rutaFilter'), uniq(rawData.map(x => x.ruta)), 'Todas las rutas');
-      fillSelect(document.getElementById('jefeFilter'), uniq(rawData.map(x => x.jefe)), 'Todos los jefes');
+      fillSelect(
+        document.getElementById('segmentoFilter'),
+        uniq(rawData.map(x => x.segmento)),
+        'Todos los segmentos'
+      );
+
+      updateRutaFilter();
+      updateJefeFilter();
+    }
+
+    function updateRutaFilter(){
+      const segmento = document.getElementById('segmentoFilter').value;
+      const rutaSelect = document.getElementById('rutaFilter');
+      const rutaActual = rutaSelect.value || 'TODOS';
+
+      const base = rawData.filter(item =>
+        segmento === 'TODOS' || item.segmento === segmento
+      );
+
+      const rutas = uniq(base.map(x => x.ruta));
+      fillSelect(rutaSelect, rutas, 'Todas las rutas');
+
+      if (rutas.includes(rutaActual)) {
+        rutaSelect.value = rutaActual;
+      } else {
+        rutaSelect.value = 'TODOS';
+      }
+    }
+
+    function updateJefeFilter(){
+      const segmento = document.getElementById('segmentoFilter').value;
+      const ruta = document.getElementById('rutaFilter').value;
+      const jefeSelect = document.getElementById('jefeFilter');
+      const jefeActual = jefeSelect.value || 'TODOS';
+
+      const base = rawData.filter(item =>
+        (segmento === 'TODOS' || item.segmento === segmento) &&
+        (ruta === 'TODOS' || item.ruta === ruta)
+      );
+
+      const jefes = uniq(base.map(x => x.jefe));
+      fillSelect(jefeSelect, jefes, 'Todos los jefes');
+
+      if (jefes.includes(jefeActual)) {
+        jefeSelect.value = jefeActual;
+      } else {
+        jefeSelect.value = 'TODOS';
+      }
     }
 
     function applyFilters(){
@@ -896,8 +941,18 @@
     document.getElementById('tabClientes').addEventListener('click', showClientes);
     document.getElementById('tabDetalle').addEventListener('click', showDetalle);
     document.getElementById('searchInput').addEventListener('input', applyFilters);
-    document.getElementById('segmentoFilter').addEventListener('change', applyFilters);
-    document.getElementById('rutaFilter').addEventListener('change', applyFilters);
+
+    document.getElementById('segmentoFilter').addEventListener('change', () => {
+      updateRutaFilter();
+      updateJefeFilter();
+      applyFilters();
+    });
+
+    document.getElementById('rutaFilter').addEventListener('change', () => {
+      updateJefeFilter();
+      applyFilters();
+    });
+
     document.getElementById('jefeFilter').addEventListener('change', applyFilters);
     document.getElementById('estadoFilter').addEventListener('change', applyFilters);
     document.getElementById('reloadBtn').addEventListener('click', loadData);
