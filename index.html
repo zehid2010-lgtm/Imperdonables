@@ -13,8 +13,8 @@
       --bg:#07111f;
       --bg2:#0f172a;
       --text:#ebf2ff;
-      --blueBorder:rgba(96,165,250,.70);
-      --blueGlow:rgba(59,130,246,.30);
+      --blueBorder:rgba(96,165,250,.82);
+      --blueGlow:rgba(59,130,246,.38);
     }
 
     *{
@@ -47,7 +47,7 @@
     }
 
     .glass{
-      background:rgba(17,28,49,.82);
+      background:rgba(17,28,49,.84);
       backdrop-filter:blur(14px);
       border:1px solid rgba(255,255,255,.08);
       box-shadow:0 10px 30px rgba(0,0,0,.28);
@@ -59,13 +59,13 @@
     }
 
     .btn{
-      min-height:38px;
-      height:38px;
-      border-radius:14px;
-      padding:6px 12px;
+      min-height:42px;
+      height:42px;
+      border-radius:16px;
+      padding:8px 14px;
       font-weight:800;
       transition:.18s ease;
-      font-size:12px;
+      font-size:13px;
     }
 
     .btn:active{
@@ -99,21 +99,25 @@
 
     .filter-control{
       width:100%;
-      height:36px;
-      border-radius:12px;
-      background:linear-gradient(180deg, rgba(37,99,235,.22), rgba(37,99,235,.14));
-      border:1px solid var(--blueBorder);
+      height:48px;
+      border-radius:16px;
+      background:linear-gradient(180deg, rgba(37,99,235,.30), rgba(37,99,235,.18));
+      border:1.5px solid var(--blueBorder);
       color:var(--text);
-      padding:0 10px;
+      padding:0 14px;
       outline:none;
-      font-size:12px;
-      font-weight:700;
-      box-shadow:0 0 0 1px rgba(37,99,235,.10) inset;
+      font-size:14px;
+      font-weight:800;
+      box-shadow:
+        0 0 0 1px rgba(37,99,235,.16) inset,
+        0 8px 18px rgba(37,99,235,.14);
     }
 
     .filter-control:focus{
-      border-color:#93c5fd;
-      box-shadow:0 0 0 3px var(--blueGlow);
+      border-color:#bfdbfe;
+      box-shadow:
+        0 0 0 4px var(--blueGlow),
+        0 10px 24px rgba(37,99,235,.22);
     }
 
     .filter-control option{
@@ -122,35 +126,14 @@
     }
 
     .filter-label{
-      font-size:10px;
+      font-size:11px;
       color:#93c5fd;
-      margin-bottom:4px;
+      margin-bottom:6px;
       display:block;
-      font-weight:800;
-      letter-spacing:.02em;
+      font-weight:900;
+      letter-spacing:.04em;
       text-transform:uppercase;
       line-height:1;
-    }
-
-    .search-pro{
-      width:100%;
-      height:36px;
-      border-radius:12px;
-      background:linear-gradient(180deg, rgba(37,99,235,.18), rgba(2,6,23,.45));
-      border:1px solid var(--blueBorder);
-      color:var(--text);
-      padding:0 12px;
-      outline:none;
-      font-size:12px;
-    }
-
-    .search-pro::placeholder{
-      color:#94a3b8;
-    }
-
-    .search-pro:focus{
-      border-color:#93c5fd;
-      box-shadow:0 0 0 3px var(--blueGlow);
     }
 
     .btn-primary-blue{
@@ -161,7 +144,7 @@
     }
 
     .btn-secondary-blue{
-      background:rgba(37,99,235,.14);
+      background:rgba(37,99,235,.16);
       color:#dbeafe;
       border:1px solid rgba(96,165,250,.35);
     }
@@ -271,6 +254,32 @@
     .top-header{
       flex:0 0 auto;
     }
+
+    .filters-highlight{
+      background:linear-gradient(180deg, rgba(30,41,59,.78), rgba(15,23,42,.96));
+      border:1px solid rgba(96,165,250,.22);
+      box-shadow:
+        0 0 0 1px rgba(59,130,246,.10) inset,
+        0 14px 28px rgba(0,0,0,.24);
+    }
+
+    .filters-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .filter-box{
+      padding:10px;
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(37,99,235,.10), rgba(15,23,42,.18));
+      border:1px solid rgba(96,165,250,.16);
+    }
+
+    .filter-box-full{
+      grid-column:1 / -1;
+    }
   </style>
 </head>
 <body>
@@ -308,58 +317,40 @@
           </div>
         </section>
 
-        <section class="glass rounded-[22px] p-3 mt-2">
+        <section class="filters-highlight rounded-[22px] p-4 mt-2">
           <div class="flex items-center justify-between mb-2">
             <div>
-              <div class="text-[14px] font-black text-blue-300">Panel de filtros</div>
-              <div class="text-[11px] text-slate-400 mt-1">Elegí la ruta y después entrá a la lista de clientes</div>
+              <div class="text-[16px] font-black text-blue-300">Filtros principales</div>
+              <div class="text-[12px] text-slate-400 mt-1">Seleccioná los filtros y entrá directo al listado</div>
             </div>
             <div class="rounded-full bg-blue-500/15 border border-blue-400/30 text-blue-200 font-bold text-[10px] px-3 py-1">
-              Activo
+              Ruta
             </div>
           </div>
 
-          <label class="filter-label">Buscar</label>
-          <input
-            id="searchInput"
-            type="text"
-            placeholder="Cliente, Outnum, Ruta, Jefe"
-            class="search-pro"
-          />
-
-          <div class="grid grid-cols-2 gap-2 mt-3">
-            <div>
+          <div class="filters-grid">
+            <div class="filter-box">
               <label class="filter-label">Segmento</label>
               <select id="segmentoFilter" class="filter-control"></select>
             </div>
 
-            <div>
+            <div class="filter-box">
               <label class="filter-label">Cedi</label>
               <select id="cediFilter" class="filter-control"></select>
             </div>
 
-            <div>
+            <div class="filter-box">
               <label class="filter-label">Ruta</label>
               <select id="rutaFilter" class="filter-control"></select>
             </div>
 
-            <div>
+            <div class="filter-box">
               <label class="filter-label">Jefe</label>
               <select id="jefeFilter" class="filter-control"></select>
             </div>
-
-            <div class="col-span-2">
-              <label class="filter-label">Estado</label>
-              <select id="estadoFilter" class="filter-control">
-                <option value="TODOS">Todos los estados</option>
-                <option value="ALTO">Alto</option>
-                <option value="MEDIO">Medio</option>
-                <option value="BAJO">Bajo</option>
-              </select>
-            </div>
           </div>
 
-          <div class="grid grid-cols-2 gap-2 mt-3">
+          <div class="grid grid-cols-2 gap-3 mt-4">
             <button id="verClientesBtn" class="btn btn-primary-blue">Ver clientes</button>
             <button id="reloadBtn" class="btn btn-secondary-blue">Recargar</button>
           </div>
@@ -499,12 +490,6 @@
       if (p >= 100) return 'bg-emerald-500';
       if (p >= 80) return 'bg-amber-400';
       return 'bg-rose-500';
-    }
-
-    function getTextState(p){
-      if (p >= 100) return 'ALTO';
-      if (p >= 80) return 'MEDIO';
-      return 'BAJO';
     }
 
     function getBadgeHtml(done){
@@ -755,25 +740,16 @@
     }
 
     function applyFilters(){
-      const q = normUpper(document.getElementById('searchInput').value);
       const segmento = document.getElementById('segmentoFilter').value;
       const cedi = document.getElementById('cediFilter').value;
       const ruta = document.getElementById('rutaFilter').value;
       const jefe = document.getElementById('jefeFilter').value;
-      const estado = document.getElementById('estadoFilter').value;
 
       filteredData = rawData.filter(item => {
-        const textHit = !q || [
-          item.cliente, item.outnum, item.ruta, item.jefe,
-          item.segmento, item.detalle, item.territorio, item.cedi
-        ].some(v => normUpper(v).includes(q));
-
         return (segmento === 'TODOS' || item.segmento === segmento) &&
                (cedi === 'TODOS' || item.cedi === cedi) &&
                (ruta === 'TODOS' || item.ruta === ruta) &&
-               (jefe === 'TODOS' || item.jefe === jefe) &&
-               (estado === 'TODOS' || getTextState(item.porcentaje) === estado) &&
-               textHit;
+               (jefe === 'TODOS' || item.jefe === jefe);
       }).sort((a, b) => {
         if (String(a.ruta) !== String(b.ruta)) {
           return String(a.ruta).localeCompare(String(b.ruta), 'es', { numeric:true });
@@ -980,8 +956,6 @@
     document.getElementById('backToFiltersBtn').addEventListener('click', showFiltros);
     document.getElementById('backToResultsBtn').addEventListener('click', showResultados);
 
-    document.getElementById('searchInput').addEventListener('input', applyFilters);
-
     document.getElementById('segmentoFilter').addEventListener('change', () => {
       updateCediFilter();
       updateRutaFilter();
@@ -1001,7 +975,6 @@
     });
 
     document.getElementById('jefeFilter').addEventListener('change', applyFilters);
-    document.getElementById('estadoFilter').addEventListener('change', applyFilters);
     document.getElementById('reloadBtn').addEventListener('click', loadData);
 
     loadData();
