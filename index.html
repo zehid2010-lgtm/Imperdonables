@@ -195,6 +195,38 @@
       border-radius:16px;
     }
 
+    .kpi-objetivo-blue{
+      background:linear-gradient(180deg, rgba(37,99,235,.30), rgba(37,99,235,.18));
+      border:1.5px solid rgba(96,165,250,.82);
+      box-shadow:
+        0 0 0 1px rgba(37,99,235,.16) inset,
+        0 8px 18px rgba(37,99,235,.14);
+    }
+
+    .kpi-avance-green{
+      background:linear-gradient(180deg, rgba(16,185,129,.26), rgba(16,185,129,.14));
+      border:1.5px solid rgba(52,211,153,.55);
+      box-shadow:
+        0 0 0 1px rgba(16,185,129,.14) inset,
+        0 8px 18px rgba(16,185,129,.14);
+    }
+
+    .kpi-avance-yellow{
+      background:linear-gradient(180deg, rgba(250,204,21,.26), rgba(250,204,21,.14));
+      border:1.5px solid rgba(250,204,21,.55);
+      box-shadow:
+        0 0 0 1px rgba(250,204,21,.14) inset,
+        0 8px 18px rgba(250,204,21,.14);
+    }
+
+    .kpi-avance-red{
+      background:linear-gradient(180deg, rgba(244,63,94,.26), rgba(244,63,94,.14));
+      border:1.5px solid rgba(251,113,133,.55);
+      box-shadow:
+        0 0 0 1px rgba(244,63,94,.14) inset,
+        0 8px 18px rgba(244,63,94,.14);
+    }
+
     .content-area{
       flex:1 1 auto;
       min-height:0;
@@ -383,11 +415,11 @@
               <div class="text-[10px] text-slate-400">Clientes</div>
               <div id="kpiClientes" class="kpi-value">0</div>
             </div>
-            <div class="chip">
+            <div id="kpiObjetivoCard" class="chip">
               <div class="text-[10px] text-slate-400">Objetivo</div>
               <div id="kpiObjetivo" class="kpi-value-small">Seleccionar segmento</div>
             </div>
-            <div class="chip">
+            <div id="kpiAvanceCard" class="chip">
               <div class="text-[10px] text-slate-400">Avance</div>
               <div id="kpiAvance" class="kpi-value">0,0%</div>
             </div>
@@ -554,6 +586,21 @@
       if (porcentaje >= objetivo) return 'bg-emerald-500';
       if (diferencia <= 5) return 'bg-amber-400';
       return 'bg-rose-500';
+    }
+
+    function getAvanceKpiClass(){
+      const segmento = document.getElementById('segmentoFilter').value;
+      if (segmento === 'TODOS') return '';
+
+      const objetivo = getObjetivoSegmento(segmento);
+      const totalImperdonables = filteredData.reduce((a, b) => a + Number(b.totalImperdonables || 0), 0);
+      const totalCumplidos = filteredData.reduce((a, b) => a + Number(b.cumplidos || 0), 0);
+      const avance = pct(totalCumplidos, totalImperdonables);
+      const diferencia = objetivo - avance;
+
+      if (avance >= objetivo) return 'kpi-avance-green';
+      if (diferencia <= 5) return 'kpi-avance-yellow';
+      return 'kpi-avance-red';
     }
 
     function parseCSVLine(line){
@@ -828,14 +875,27 @@
 
     function renderKPIs(){
       const totalClientes = filteredData.length;
-      const totalImperdonables = filteredData.reduce((a, b) => a + Number(b.totalImperdonables || 0), 0);
       const totalCumplidos = filteredData.reduce((a, b) => a + Number(b.cumplidos || 0), 0);
+      const totalImperdonables = filteredData.reduce((a, b) => a + Number(b.totalImperdonables || 0), 0);
       const avance = pct(totalCumplidos, totalImperdonables);
+      const segmento = document.getElementById('segmentoFilter').value;
 
       document.getElementById('kpiClientes').textContent = totalClientes;
       document.getElementById('kpiCumplidos').textContent = totalCumplidos;
       document.getElementById('kpiAvance').textContent = formatPct(avance);
       document.getElementById('kpiObjetivo').textContent = getObjetivoTextoSegmento();
+
+      const objetivoCard = document.getElementById('kpiObjetivoCard');
+      const avanceCard = document.getElementById('kpiAvanceCard');
+
+      objetivoCard.className = 'chip';
+      avanceCard.className = 'chip';
+
+      objetivoCard.classList.add('kpi-objetivo-blue');
+
+      if (segmento !== 'TODOS') {
+        avanceCard.classList.add(getAvanceKpiClass());
+      }
     }
 
     function renderResults(){
