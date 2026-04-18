@@ -434,10 +434,10 @@
           <div class="flex items-center justify-between mb-2">
             <div>
               <div class="text-[16px] font-black text-blue-300">Filtros principales</div>
-              <div class="text-[12px] text-slate-400 mt-1">Objetivo: seleccionar segmento</div>
+              <div class="text-[12px] text-slate-400 mt-1">Objetivo: seleccionar segmento, luego jefe y después ruta</div>
             </div>
             <div class="rounded-full bg-blue-500/15 border border-blue-400/30 text-blue-200 font-bold text-[10px] px-3 py-1">
-              Ruta
+              Jefe / Ruta
             </div>
           </div>
 
@@ -448,13 +448,13 @@
             </div>
 
             <div class="filter-box">
-              <label class="filter-label">Ruta</label>
-              <select id="rutaFilter" class="filter-control"></select>
+              <label class="filter-label">Jefe</label>
+              <select id="jefeFilter" class="filter-control"></select>
             </div>
 
             <div class="filter-box">
-              <label class="filter-label">Jefe</label>
-              <select id="jefeFilter" class="filter-control"></select>
+              <label class="filter-label">Ruta</label>
+              <select id="rutaFilter" class="filter-control"></select>
             </div>
           </div>
 
@@ -469,7 +469,7 @@
         <div class="glass rounded-[22px] p-4 h-full flex items-center justify-center text-center text-slate-400">
           <div>
             <div class="text-base font-black text-slate-200">Elegí los filtros</div>
-            <div class="text-sm mt-2">Recomendación visual: primero seleccionar segmento y después la ruta.</div>
+            <div class="text-sm mt-2">Recomendación visual: primero seleccionar segmento, después jefe y luego ruta.</div>
           </div>
         </div>
       </div>
@@ -797,8 +797,8 @@
         'Todos los segmentos'
       );
 
-      updateRutaFilter();
       updateJefeFilter();
+      updateRutaFilter();
     }
 
     function getBaseBySegmento(){
@@ -808,35 +808,20 @@
       );
     }
 
-    function getBaseBySegmentoRuta(){
+    function getBaseBySegmentoJefe(){
       const segmento = document.getElementById('segmentoFilter').value;
-      const ruta = document.getElementById('rutaFilter').value;
+      const jefe = document.getElementById('jefeFilter').value;
 
       return rawData.filter(item =>
         (segmento === 'TODOS' || item.segmento === segmento) &&
-        (ruta === 'TODOS' || item.ruta === ruta)
+        (jefe === 'TODOS' || item.jefe === jefe)
       );
-    }
-
-    function updateRutaFilter(){
-      const rutaSelect = document.getElementById('rutaFilter');
-      const rutaActual = rutaSelect.value || 'TODOS';
-      const base = getBaseBySegmento();
-      const rutas = uniq(base.map(x => x.ruta));
-
-      fillSelect(rutaSelect, rutas, 'Todas las rutas');
-
-      if (rutas.includes(rutaActual)) {
-        rutaSelect.value = rutaActual;
-      } else {
-        rutaSelect.value = 'TODOS';
-      }
     }
 
     function updateJefeFilter(){
       const jefeSelect = document.getElementById('jefeFilter');
       const jefeActual = jefeSelect.value || 'TODOS';
-      const base = getBaseBySegmentoRuta();
+      const base = getBaseBySegmento();
       const jefes = uniq(base.map(x => x.jefe));
 
       fillSelect(jefeSelect, jefes, 'Todos los jefes');
@@ -848,15 +833,30 @@
       }
     }
 
+    function updateRutaFilter(){
+      const rutaSelect = document.getElementById('rutaFilter');
+      const rutaActual = rutaSelect.value || 'TODOS';
+      const base = getBaseBySegmentoJefe();
+      const rutas = uniq(base.map(x => x.ruta));
+
+      fillSelect(rutaSelect, rutas, 'Todas las rutas');
+
+      if (rutas.includes(rutaActual)) {
+        rutaSelect.value = rutaActual;
+      } else {
+        rutaSelect.value = 'TODOS';
+      }
+    }
+
     function applyFilters(){
       const segmento = document.getElementById('segmentoFilter').value;
-      const ruta = document.getElementById('rutaFilter').value;
       const jefe = document.getElementById('jefeFilter').value;
+      const ruta = document.getElementById('rutaFilter').value;
 
       filteredData = rawData.filter(item => {
         return (segmento === 'TODOS' || item.segmento === segmento) &&
-               (ruta === 'TODOS' || item.ruta === ruta) &&
-               (jefe === 'TODOS' || item.jefe === jefe);
+               (jefe === 'TODOS' || item.jefe === jefe) &&
+               (ruta === 'TODOS' || item.ruta === ruta);
       }).sort((a, b) => {
         if (String(a.ruta) !== String(b.ruta)) {
           return String(a.ruta).localeCompare(String(b.ruta), 'es', { numeric:true });
@@ -1084,17 +1084,18 @@
     document.getElementById('backToResultsBtn').addEventListener('click', showResultados);
 
     document.getElementById('segmentoFilter').addEventListener('change', () => {
+      updateJefeFilter();
       updateRutaFilter();
-      updateJefeFilter();
       applyFilters();
     });
 
-    document.getElementById('rutaFilter').addEventListener('change', () => {
-      updateJefeFilter();
+    document.getElementById('jefeFilter').addEventListener('change', () => {
+      document.getElementById('rutaFilter').value = 'TODOS';
+      updateRutaFilter();
       applyFilters();
     });
 
-    document.getElementById('jefeFilter').addEventListener('change', applyFilters);
+    document.getElementById('rutaFilter').addEventListener('change', applyFilters);
     document.getElementById('reloadBtn').addEventListener('click', loadData);
 
     loadData();
