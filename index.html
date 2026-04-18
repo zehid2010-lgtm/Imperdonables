@@ -177,6 +177,13 @@
       margin-top:4px;
     }
 
+    .kpi-value-small{
+      font-size:1rem;
+      line-height:1.1;
+      font-weight:900;
+      margin-top:4px;
+    }
+
     .hero-kpis{
       gap:8px !important;
       margin-top:10px !important;
@@ -377,12 +384,12 @@
               <div id="kpiClientes" class="kpi-value">0</div>
             </div>
             <div class="chip">
-              <div class="text-[10px] text-slate-400">Avance</div>
-              <div id="kpiAvance" class="kpi-value">0,0%</div>
+              <div class="text-[10px] text-slate-400">Objetivo</div>
+              <div id="kpiObjetivo" class="kpi-value-small">Seleccionar segmento</div>
             </div>
             <div class="chip">
-              <div class="text-[10px] text-slate-400">Imperdonables</div>
-              <div id="kpiImperdonables" class="kpi-value">0</div>
+              <div class="text-[10px] text-slate-400">Avance</div>
+              <div id="kpiAvance" class="kpi-value">0,0%</div>
             </div>
             <div class="chip">
               <div class="text-[10px] text-slate-400">Cumplidos</div>
@@ -395,7 +402,7 @@
           <div class="flex items-center justify-between mb-2">
             <div>
               <div class="text-[16px] font-black text-blue-300">Filtros principales</div>
-              <div class="text-[12px] text-slate-400 mt-1">Seleccioná la ruta y entrá directo al listado</div>
+              <div class="text-[12px] text-slate-400 mt-1">Objetivo: seleccionar segmento</div>
             </div>
             <div class="rounded-full bg-blue-500/15 border border-blue-400/30 text-blue-200 font-bold text-[10px] px-3 py-1">
               Ruta
@@ -430,7 +437,7 @@
         <div class="glass rounded-[22px] p-4 h-full flex items-center justify-center text-center text-slate-400">
           <div>
             <div class="text-base font-black text-slate-200">Elegí los filtros</div>
-            <div class="text-sm mt-2">Después tocá <b>“Ver clientes”</b> para ir a la lista de resultados.</div>
+            <div class="text-sm mt-2">Recomendación visual: primero seleccionar segmento y después la ruta.</div>
           </div>
         </div>
       </div>
@@ -532,6 +539,12 @@
 
     function getObjetivoSegmento(segmento){
       return Number(CONFIG.objetivosSegmento[segmento] || 0);
+    }
+
+    function getObjetivoTextoSegmento(){
+      const segmento = document.getElementById('segmentoFilter').value;
+      if (segmento === 'TODOS') return 'Seleccionar segmento';
+      return formatPct(getObjetivoSegmento(segmento));
     }
 
     function getColorClassByObjetivo(segmento, porcentaje){
@@ -820,9 +833,9 @@
       const avance = pct(totalCumplidos, totalImperdonables);
 
       document.getElementById('kpiClientes').textContent = totalClientes;
-      document.getElementById('kpiImperdonables').textContent = totalImperdonables;
       document.getElementById('kpiCumplidos').textContent = totalCumplidos;
       document.getElementById('kpiAvance').textContent = formatPct(avance);
+      document.getElementById('kpiObjetivo').textContent = getObjetivoTextoSegmento();
     }
 
     function renderResults(){
@@ -849,6 +862,7 @@
         const pending = Math.max(item.totalImperdonables - item.cumplidos, 0);
         const activeClass = selectedKey === item.key ? 'client-card-active' : 'border-white/5';
         const safeKey = item.key.replace(/'/g, "\\'");
+        const objetivo = getObjetivoSegmento(item.segmento);
 
         return `
           <button onclick="selectClient('${safeKey}')" class="client-card glass w-full text-left border ${activeClass}">
@@ -857,6 +871,7 @@
                 <div class="text-[11px] text-slate-400 uppercase tracking-wide">${esc(item.segmento)} · ${esc(item.cedi || '-')} · Ruta ${esc(item.ruta || '-')}</div>
                 <div class="font-black text-[18px] leading-tight mt-1">${esc(item.cliente || '-')}</div>
                 <div class="text-[12px] text-slate-300 mt-2">Outnum ${esc(item.outnum || '-')} · ${esc(item.jefe || '-')}</div>
+                <div class="text-[11px] text-slate-400 mt-2">Objetivo: ${formatPct(objetivo)} · Avance: ${formatPct(item.porcentaje)}</div>
                 <div class="text-[11px] text-slate-500 mt-1 line-clamp-1">${esc(item.detalle || '-')} · ${esc(item.territorio || '-')}</div>
               </div>
               <div class="shrink-0 rounded-2xl px-3 py-2 ${barColor} text-slate-950 font-black text-[13px]">${formatPct(item.porcentaje)}</div>
@@ -903,6 +918,7 @@
       selectedKey = item.key;
       const barColor = getColorClassByObjetivo(item.segmento, item.porcentaje);
       const pendientes = Math.max(item.totalImperdonables - item.cumplidos, 0);
+      const objetivo = getObjetivoSegmento(item.segmento);
 
       panel.innerHTML = `
         <div class="space-y-3 pb-4">
@@ -913,6 +929,8 @@
                 <div class="text-[20px] font-black leading-tight mt-1">${esc(item.cliente || '-')}</div>
                 <div class="text-sm text-slate-300 mt-1">Outnum ${esc(item.outnum || '-')}</div>
                 <div class="text-sm text-slate-400">Jefe: ${esc(item.jefe || '-')}</div>
+                <div class="text-sm text-slate-400">Objetivo segmento: ${formatPct(objetivo)}</div>
+                <div class="text-sm text-slate-400">Avance actual: ${formatPct(item.porcentaje)}</div>
                 <div class="text-sm text-slate-400">Detalle: ${esc(item.detalle || '-')} · Territorio: ${esc(item.territorio || '-')}</div>
                 <div class="text-sm text-slate-400">Cedi: ${esc(item.cedi || '-')}</div>
               </div>
