@@ -15,6 +15,8 @@
       --text:#ebf2ff;
       --blueBorder:rgba(96,165,250,.82);
       --blueGlow:rgba(59,130,246,.38);
+      --back1:#38bdf8;
+      --back2:#2563eb;
     }
 
     *{
@@ -59,8 +61,8 @@
     }
 
     .btn{
-      min-height:42px;
-      height:42px;
+      min-height:44px;
+      height:44px;
       border-radius:16px;
       padding:8px 14px;
       font-weight:800;
@@ -88,8 +90,8 @@
     }
 
     .scroll-soft::-webkit-scrollbar{
-      width:8px;
-      height:8px;
+      width:10px;
+      height:10px;
     }
 
     .scroll-soft::-webkit-scrollbar-thumb{
@@ -99,7 +101,7 @@
 
     .filter-control{
       width:100%;
-      height:48px;
+      height:50px;
       border-radius:16px;
       background:linear-gradient(180deg, rgba(37,99,235,.30), rgba(37,99,235,.18));
       border:1.5px solid var(--blueBorder);
@@ -149,10 +151,23 @@
       border:1px solid rgba(96,165,250,.35);
     }
 
-    .btn-dark{
-      background:rgba(255,255,255,.06);
-      color:#e2e8f0;
-      border:1px solid rgba(255,255,255,.10);
+    .btn-back{
+      min-width:108px;
+      height:50px;
+      border-radius:18px;
+      padding:0 18px;
+      font-size:15px;
+      font-weight:900;
+      color:white;
+      background:linear-gradient(180deg,var(--back1),var(--back2));
+      border:1px solid rgba(186,230,253,.45);
+      box-shadow:
+        0 12px 24px rgba(37,99,235,.30),
+        0 0 0 1px rgba(255,255,255,.08) inset;
+    }
+
+    .btn-back:hover{
+      filter:brightness(1.05);
     }
 
     .kpi-value{
@@ -241,14 +256,14 @@
     }
 
     .section-title{
-      font-size:15px;
+      font-size:18px;
       line-height:1;
     }
 
     .section-subtitle{
-      font-size:11px;
+      font-size:12px;
       line-height:1.2;
-      margin-top:3px;
+      margin-top:4px;
     }
 
     .top-header{
@@ -265,7 +280,7 @@
 
     .filters-grid{
       display:grid;
-      grid-template-columns:1fr 1fr;
+      grid-template-columns:1fr;
       gap:12px;
       margin-top:12px;
     }
@@ -277,8 +292,67 @@
       border:1px solid rgba(96,165,250,.16);
     }
 
-    .filter-box-full{
-      grid-column:1 / -1;
+    .sticky-head{
+      position:sticky;
+      top:0;
+      z-index:10;
+      background:linear-gradient(180deg, rgba(7,17,31,.98), rgba(7,17,31,.90));
+      backdrop-filter:blur(12px);
+      padding-bottom:6px;
+    }
+
+    .detail-items{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .detail-item{
+      border-radius:18px;
+      padding:14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .detail-item.ok{
+      border:1px solid rgba(16,185,129,.28);
+      background:rgba(16,185,129,.10);
+    }
+
+    .detail-item.no{
+      border:1px solid rgba(244,63,94,.28);
+      background:rgba(244,63,94,.10);
+    }
+
+    .badge-ok{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:42px;
+      height:30px;
+      padding:0 12px;
+      border-radius:999px;
+      background:#10b981;
+      color:#052e16;
+      font-size:12px;
+      font-weight:900;
+    }
+
+    .badge-no{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:42px;
+      height:30px;
+      padding:0 12px;
+      border-radius:999px;
+      background:#f43f5e;
+      color:white;
+      font-size:12px;
+      font-weight:900;
     }
   </style>
 </head>
@@ -321,7 +395,7 @@
           <div class="flex items-center justify-between mb-2">
             <div>
               <div class="text-[16px] font-black text-blue-300">Filtros principales</div>
-              <div class="text-[12px] text-slate-400 mt-1">Seleccioná los filtros y entrá directo al listado</div>
+              <div class="text-[12px] text-slate-400 mt-1">Seleccioná la ruta y entrá directo al listado</div>
             </div>
             <div class="rounded-full bg-blue-500/15 border border-blue-400/30 text-blue-200 font-bold text-[10px] px-3 py-1">
               Ruta
@@ -332,11 +406,6 @@
             <div class="filter-box">
               <label class="filter-label">Segmento</label>
               <select id="segmentoFilter" class="filter-control"></select>
-            </div>
-
-            <div class="filter-box">
-              <label class="filter-label">Cedi</label>
-              <select id="cediFilter" class="filter-control"></select>
             </div>
 
             <div class="filter-box">
@@ -368,34 +437,38 @@
     </div>
 
     <div id="resultadosView" class="hidden-view">
-      <div class="top-header glass rounded-[22px] p-3">
-        <div class="flex items-center gap-2">
-          <button id="backToFiltersBtn" class="btn btn-dark">Volver</button>
-          <div class="min-w-0 flex-1">
-            <div id="resultsTitle" class="section-title font-black">Clientes filtrados</div>
-            <div id="resultsSubtitle" class="section-subtitle text-slate-400">0 clientes encontrados</div>
+      <div class="top-header sticky-head">
+        <div class="glass rounded-[22px] p-3">
+          <div class="flex items-center gap-3">
+            <button id="backToFiltersBtn" class="btn-back">⬅ Volver</button>
+            <div class="min-w-0 flex-1">
+              <div id="resultsTitle" class="section-title font-black">Clientes filtrados</div>
+              <div id="resultsSubtitle" class="section-subtitle text-slate-400">0 clientes encontrados</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="content-area mt-2">
+      <div class="content-area mt-1">
         <div id="resultsContainer" class="scroll-soft"></div>
       </div>
     </div>
 
     <div id="detalleView" class="hidden-view">
-      <div class="top-header glass rounded-[22px] p-3">
-        <div class="flex items-center gap-2">
-          <button id="backToResultsBtn" class="btn btn-dark">Volver</button>
-          <div class="min-w-0 flex-1">
-            <div class="section-title font-black">Detalle del cliente</div>
-            <div class="section-subtitle text-slate-400">Imperdonables y avance</div>
+      <div class="top-header sticky-head">
+        <div class="glass rounded-[22px] p-3">
+          <div class="flex items-center gap-3">
+            <button id="backToResultsBtn" class="btn-back">⬅ Volver</button>
+            <div class="min-w-0 flex-1">
+              <div class="section-title font-black">Detalle del cliente</div>
+              <div class="section-subtitle text-slate-400">Imperdonables y avance</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="content-area mt-2">
-        <div id="detailPanel" class="space-y-2 scroll-soft">
+      <div class="content-area mt-1">
+        <div id="detailPanel" class="scroll-soft">
           <div class="glass rounded-[24px] p-5 text-center text-slate-400">Seleccioná un cliente.</div>
         </div>
       </div>
@@ -494,8 +567,8 @@
 
     function getBadgeHtml(done){
       return done
-        ? '<span class="inline-flex items-center justify-center h-7 px-3 rounded-full bg-emerald-500 text-slate-950 text-[11px] font-black">OK</span>'
-        : '<span class="inline-flex items-center justify-center h-7 px-3 rounded-full bg-rose-500 text-white text-[11px] font-black">NO</span>';
+        ? '<span class="badge-ok">OK</span>'
+        : '<span class="badge-no">NO</span>';
     }
 
     function isBiBooleanValue(rawVal){
@@ -620,8 +693,6 @@
       rawData = [];
       filteredData = [];
 
-      const errors = [];
-
       for (const sheet of CONFIG.sheets) {
         try {
           const rows = await fetchCSV(sheet.url);
@@ -629,7 +700,6 @@
           rawData.push(...clients);
         } catch (err) {
           console.error('Error en hoja', sheet.segmento, err);
-          errors.push(sheet.segmento);
         }
       }
 
@@ -638,13 +708,6 @@
 
       if (filteredData.length && !selectedKey) selectedKey = filteredData[0].key;
       renderDetail();
-
-      if (!rawData.length) {
-        document.getElementById('resultsSubtitle').textContent = 'No se pudieron cargar datos.';
-      } else if (errors.length) {
-        document.getElementById('resultsSubtitle').textContent =
-          `${filteredData.length} clientes visibles · Error en: ${errors.join(', ')}`;
-      }
     }
 
     function fillSelect(el, values, firstLabel){
@@ -660,7 +723,6 @@
         'Todos los segmentos'
       );
 
-      updateCediFilter();
       updateRutaFilter();
       updateJefeFilter();
     }
@@ -672,47 +734,20 @@
       );
     }
 
-    function getBaseBySegmentoCedi(){
+    function getBaseBySegmentoRuta(){
       const segmento = document.getElementById('segmentoFilter').value;
-      const cedi = document.getElementById('cediFilter').value;
-
-      return rawData.filter(item =>
-        (segmento === 'TODOS' || item.segmento === segmento) &&
-        (cedi === 'TODOS' || item.cedi === cedi)
-      );
-    }
-
-    function getBaseBySegmentoCediRuta(){
-      const segmento = document.getElementById('segmentoFilter').value;
-      const cedi = document.getElementById('cediFilter').value;
       const ruta = document.getElementById('rutaFilter').value;
 
       return rawData.filter(item =>
         (segmento === 'TODOS' || item.segmento === segmento) &&
-        (cedi === 'TODOS' || item.cedi === cedi) &&
         (ruta === 'TODOS' || item.ruta === ruta)
       );
-    }
-
-    function updateCediFilter(){
-      const cediSelect = document.getElementById('cediFilter');
-      const cediActual = cediSelect.value || 'TODOS';
-      const base = getBaseBySegmento();
-      const cedis = uniq(base.map(x => x.cedi));
-
-      fillSelect(cediSelect, cedis, 'Todos los cedis');
-
-      if (cedis.includes(cediActual)) {
-        cediSelect.value = cediActual;
-      } else {
-        cediSelect.value = 'TODOS';
-      }
     }
 
     function updateRutaFilter(){
       const rutaSelect = document.getElementById('rutaFilter');
       const rutaActual = rutaSelect.value || 'TODOS';
-      const base = getBaseBySegmentoCedi();
+      const base = getBaseBySegmento();
       const rutas = uniq(base.map(x => x.ruta));
 
       fillSelect(rutaSelect, rutas, 'Todas las rutas');
@@ -727,7 +762,7 @@
     function updateJefeFilter(){
       const jefeSelect = document.getElementById('jefeFilter');
       const jefeActual = jefeSelect.value || 'TODOS';
-      const base = getBaseBySegmentoCediRuta();
+      const base = getBaseBySegmentoRuta();
       const jefes = uniq(base.map(x => x.jefe));
 
       fillSelect(jefeSelect, jefes, 'Todos los jefes');
@@ -741,13 +776,11 @@
 
     function applyFilters(){
       const segmento = document.getElementById('segmentoFilter').value;
-      const cedi = document.getElementById('cediFilter').value;
       const ruta = document.getElementById('rutaFilter').value;
       const jefe = document.getElementById('jefeFilter').value;
 
       filteredData = rawData.filter(item => {
         return (segmento === 'TODOS' || item.segmento === segmento) &&
-               (cedi === 'TODOS' || item.cedi === cedi) &&
                (ruta === 'TODOS' || item.ruta === ruta) &&
                (jefe === 'TODOS' || item.jefe === jefe);
       }).sort((a, b) => {
@@ -858,65 +891,67 @@
       const pendientes = Math.max(item.totalImperdonables - item.cumplidos, 0);
 
       panel.innerHTML = `
-        <div class="glass rounded-[24px] p-4">
-          <div class="flex items-start justify-between gap-3">
-            <div class="min-w-0 flex-1">
-              <div class="text-[11px] text-slate-400 uppercase tracking-wide">${esc(item.segmento)} · ${esc(item.cedi || '-')} · Ruta ${esc(item.ruta || '-')}</div>
-              <div class="text-[20px] font-black leading-tight mt-1">${esc(item.cliente || '-')}</div>
-              <div class="text-sm text-slate-300 mt-1">Outnum ${esc(item.outnum || '-')}</div>
-              <div class="text-sm text-slate-400">Jefe: ${esc(item.jefe || '-')}</div>
-              <div class="text-sm text-slate-400">Detalle: ${esc(item.detalle || '-')} · Territorio: ${esc(item.territorio || '-')}</div>
-              <div class="text-sm text-slate-400">Cedi: ${esc(item.cedi || '-')}</div>
+        <div class="space-y-3 pb-4">
+          <div class="glass rounded-[24px] p-4">
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0 flex-1">
+                <div class="text-[11px] text-slate-400 uppercase tracking-wide">${esc(item.segmento)} · ${esc(item.cedi || '-')} · Ruta ${esc(item.ruta || '-')}</div>
+                <div class="text-[20px] font-black leading-tight mt-1">${esc(item.cliente || '-')}</div>
+                <div class="text-sm text-slate-300 mt-1">Outnum ${esc(item.outnum || '-')}</div>
+                <div class="text-sm text-slate-400">Jefe: ${esc(item.jefe || '-')}</div>
+                <div class="text-sm text-slate-400">Detalle: ${esc(item.detalle || '-')} · Territorio: ${esc(item.territorio || '-')}</div>
+                <div class="text-sm text-slate-400">Cedi: ${esc(item.cedi || '-')}</div>
+              </div>
+              <div class="shrink-0 rounded-2xl px-3 py-2 ${barColor} text-slate-950 font-black">${formatPct(item.porcentaje)}</div>
             </div>
-            <div class="shrink-0 rounded-2xl px-3 py-2 ${barColor} text-slate-950 font-black">${formatPct(item.porcentaje)}</div>
+
+            <div class="grid grid-cols-3 gap-2 mt-4">
+              <div class="chip rounded-2xl p-3">
+                <div class="text-[10px] text-slate-400">Total</div>
+                <div class="text-xl font-black mt-1">${item.totalImperdonables}</div>
+              </div>
+              <div class="chip rounded-2xl p-3">
+                <div class="text-[10px] text-slate-400">OK</div>
+                <div class="text-xl font-black mt-1">${item.cumplidos}</div>
+              </div>
+              <div class="chip rounded-2xl p-3">
+                <div class="text-[10px] text-slate-400">Pend.</div>
+                <div class="text-xl font-black mt-1">${pendientes}</div>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <div class="flex items-center justify-between text-[11px] text-slate-400 mb-2">
+                <span>Avance general</span>
+                <span>${item.cumplidos}/${item.totalImperdonables}</span>
+              </div>
+              <div class="mini-progress">
+                <div class="h-full ${barColor}" style="width:${Math.min(item.porcentaje,100)}%"></div>
+              </div>
+            </div>
           </div>
 
-          <div class="grid grid-cols-3 gap-2 mt-4">
-            <div class="chip rounded-2xl p-3">
-              <div class="text-[10px] text-slate-400">Total</div>
-              <div class="text-xl font-black mt-1">${item.totalImperdonables}</div>
+          <div class="glass rounded-[24px] p-4">
+            <div class="flex items-center justify-between mb-3">
+              <div class="text-base font-black">Imperdonables</div>
+              <div class="text-xs text-slate-400">Rojo = pendiente · Verde = cumplido</div>
             </div>
-            <div class="chip rounded-2xl p-3">
-              <div class="text-[10px] text-slate-400">OK</div>
-              <div class="text-xl font-black mt-1">${item.cumplidos}</div>
-            </div>
-            <div class="chip rounded-2xl p-3">
-              <div class="text-[10px] text-slate-400">Pend.</div>
-              <div class="text-xl font-black mt-1">${pendientes}</div>
-            </div>
-          </div>
 
-          <div class="mt-4">
-            <div class="flex items-center justify-between text-[11px] text-slate-400 mb-2">
-              <span>Avance general</span>
-              <span>${item.cumplidos}/${item.totalImperdonables}</span>
-            </div>
-            <div class="mini-progress">
-              <div class="h-full ${barColor}" style="width:${Math.min(item.porcentaje,100)}%"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="glass rounded-[24px] p-4">
-          <div class="flex items-center justify-between mb-3">
-            <div class="text-base font-black">Imperdonables</div>
-            <div class="text-xs text-slate-400">Rojo = pendiente · Verde = cumplido</div>
-          </div>
-
-          <div class="space-y-2 max-h-[55vh] overflow-auto scroll-soft pr-1">
-            ${
-              item.imperdonables.length
-                ? item.imperdonables.map(imp => `
-                  <div class="rounded-2xl border ${imp.cumplido ? 'border-emerald-500/25 bg-emerald-500/10' : 'border-rose-500/25 bg-rose-500/10'} px-3 py-3 flex items-center justify-between gap-3">
-                    <div class="min-w-0 flex-1">
-                      <div class="font-bold text-sm leading-tight ${imp.cumplido ? 'line-through text-emerald-300' : 'text-rose-200'}">${esc(getDisplayName(imp.nombre))}</div>
-                      <div class="text-[11px] text-slate-400 mt-1">Valor base: ${esc(imp.rawVal || '-')}</div>
+            <div class="detail-items">
+              ${
+                item.imperdonables.length
+                  ? item.imperdonables.map(imp => `
+                    <div class="detail-item ${imp.cumplido ? 'ok' : 'no'}">
+                      <div class="min-w-0 flex-1">
+                        <div class="font-bold text-sm leading-tight ${imp.cumplido ? 'line-through text-emerald-300' : 'text-rose-200'}">${esc(getDisplayName(imp.nombre))}</div>
+                        <div class="text-[11px] text-slate-400 mt-1">Valor base: ${esc(imp.rawVal || '-')}</div>
+                      </div>
+                      <div class="shrink-0">${getBadgeHtml(imp.cumplido)}</div>
                     </div>
-                    <div class="shrink-0">${getBadgeHtml(imp.cumplido)}</div>
-                  </div>
-                `).join('')
-                : '<div class="text-slate-400 text-sm">Sin imperdonables activos.</div>'
-            }
+                  `).join('')
+                  : '<div class="text-slate-400 text-sm">Sin imperdonables activos.</div>'
+              }
+            </div>
           </div>
         </div>
       `;
@@ -957,13 +992,6 @@
     document.getElementById('backToResultsBtn').addEventListener('click', showResultados);
 
     document.getElementById('segmentoFilter').addEventListener('change', () => {
-      updateCediFilter();
-      updateRutaFilter();
-      updateJefeFilter();
-      applyFilters();
-    });
-
-    document.getElementById('cediFilter').addEventListener('change', () => {
       updateRutaFilter();
       updateJefeFilter();
       applyFilters();
