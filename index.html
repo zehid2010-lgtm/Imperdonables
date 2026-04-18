@@ -485,6 +485,13 @@
         { segmento: 'KIOSCO',       url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=1866612683&single=true&output=csv' },
         { segmento: 'BRONCE',       url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=1006300389&single=true&output=csv' }
       ],
+      objetivosSegmento: {
+        AUTOSERVICIO: 70.25,
+        ORO: 73.52,
+        PLATA: 71.55,
+        BRONCE: 43.90,
+        KIOSCO: 36.90
+      },
       headerAliases: {}
     };
 
@@ -523,6 +530,19 @@
       return CONFIG.headerAliases[name] || name;
     }
 
+    function getObjetivoSegmento(segmento){
+      return Number(CONFIG.objetivosSegmento[segmento] || 0);
+    }
+
+    function getColorClassByObjetivo(segmento, porcentaje){
+      const objetivo = getObjetivoSegmento(segmento);
+      const diferencia = objetivo - porcentaje;
+
+      if (porcentaje >= objetivo) return 'bg-emerald-500';
+      if (diferencia <= 5) return 'bg-amber-400';
+      return 'bg-rose-500';
+    }
+
     function parseCSVLine(line){
       const result = [];
       let current = '';
@@ -557,12 +577,6 @@
         .split(/\r?\n/)
         .filter(line => line.trim() !== '')
         .map(parseCSVLine);
-    }
-
-    function getColorClass(p){
-      if (p >= 100) return 'bg-emerald-500';
-      if (p >= 80) return 'bg-amber-400';
-      return 'bg-rose-500';
     }
 
     function getBadgeHtml(done){
@@ -831,7 +845,7 @@
       }
 
       box.innerHTML = filteredData.map(item => {
-        const barColor = getColorClass(item.porcentaje);
+        const barColor = getColorClassByObjetivo(item.segmento, item.porcentaje);
         const pending = Math.max(item.totalImperdonables - item.cumplidos, 0);
         const activeClass = selectedKey === item.key ? 'client-card-active' : 'border-white/5';
         const safeKey = item.key.replace(/'/g, "\\'");
@@ -887,7 +901,7 @@
       }
 
       selectedKey = item.key;
-      const barColor = getColorClass(item.porcentaje);
+      const barColor = getColorClassByObjetivo(item.segmento, item.porcentaje);
       const pendientes = Math.max(item.totalImperdonables - item.cumplidos, 0);
 
       panel.innerHTML = `
