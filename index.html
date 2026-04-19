@@ -1,165 +1,1153 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Imperdonables Auditables PRO</title>
-<script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+  />
+  <title>Imperdonables Mobile Pro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root{
+      --bg:#07111f;
+      --bg2:#0f172a;
+      --text:#ebf2ff;
+      --blueBorder:rgba(96,165,250,.82);
+      --blueGlow:rgba(59,130,246,.38);
+      --back1:#38bdf8;
+      --back2:#2563eb;
+    }
 
-<style>
-body{
-margin:0;
-font-family:Arial,Helvetica,sans-serif;
-background:#07111f;
-color:white;
+    *{
+      box-sizing:border-box;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    html,body{
+      margin:0;
+      padding:0;
+      height:100%;
+      overflow:hidden;
+      background:linear-gradient(180deg,var(--bg),var(--bg2));
+      color:var(--text);
+      font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;
+    }
+
+    body{
+      overflow-x:hidden;
+    }
+
+    .app-shell{
+      max-width:560px;
+      margin:0 auto;
+      height:100vh;
+      display:flex;
+      flex-direction:column;
+      padding:8px;
+      gap:8px;
+    }
+
+    .glass{
+      background:rgba(17,28,49,.84);
+      backdrop-filter:blur(14px);
+      border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 10px 30px rgba(0,0,0,.28);
+    }
+
+    .chip{
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    .btn{
+      min-height:44px;
+      height:44px;
+      border-radius:16px;
+      padding:8px 14px;
+      font-weight:800;
+      transition:.18s ease;
+      font-size:13px;
+    }
+
+    .btn:active{
+      transform:scale(.98);
+    }
+
+    .hidden-view{
+      display:none !important;
+    }
+
+    .line-clamp-1{
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+
+    .scroll-soft{
+      overflow:auto;
+      -webkit-overflow-scrolling:touch;
+    }
+
+    .scroll-soft::-webkit-scrollbar{
+      width:10px;
+      height:10px;
+    }
+
+    .scroll-soft::-webkit-scrollbar-thumb{
+      background:#334155;
+      border-radius:999px;
+    }
+
+    .filter-control{
+      width:100%;
+      height:50px;
+      border-radius:16px;
+      background:linear-gradient(180deg, rgba(37,99,235,.30), rgba(37,99,235,.18));
+      border:1.5px solid var(--blueBorder);
+      color:var(--text);
+      padding:0 14px;
+      outline:none;
+      font-size:14px;
+      font-weight:800;
+      box-shadow:
+        0 0 0 1px rgba(37,99,235,.16) inset,
+        0 8px 18px rgba(37,99,235,.14);
+    }
+
+    .filter-control:focus{
+      border-color:#bfdbfe;
+      box-shadow:
+        0 0 0 4px var(--blueGlow),
+        0 10px 24px rgba(37,99,235,.22);
+    }
+
+    .filter-control option{
+      background:#0f172a;
+      color:#ebf2ff;
+    }
+
+    .filter-label{
+      font-size:11px;
+      color:#93c5fd;
+      margin-bottom:6px;
+      display:block;
+      font-weight:900;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      line-height:1;
+    }
+
+    .btn-primary-blue{
+      background:linear-gradient(180deg,#3b82f6,#2563eb);
+      color:white;
+      border:1px solid rgba(147,197,253,.35);
+      box-shadow:0 10px 22px rgba(37,99,235,.24);
+    }
+
+    .btn-secondary-blue{
+      background:rgba(37,99,235,.16);
+      color:#dbeafe;
+      border:1px solid rgba(96,165,250,.35);
+    }
+
+    .btn-back{
+      min-width:108px;
+      height:50px;
+      border-radius:18px;
+      padding:0 18px;
+      font-size:15px;
+      font-weight:900;
+      color:white;
+      background:linear-gradient(180deg,var(--back1),var(--back2));
+      border:1px solid rgba(186,230,253,.45);
+      box-shadow:
+        0 12px 24px rgba(37,99,235,.30),
+        0 0 0 1px rgba(255,255,255,.08) inset;
+    }
+
+    .btn-back:hover{
+      filter:brightness(1.05);
+    }
+
+    .kpi-value{
+      font-size:1.15rem;
+      line-height:1;
+      font-weight:900;
+      margin-top:4px;
+    }
+
+    .kpi-value-small{
+      font-size:1rem;
+      line-height:1.1;
+      font-weight:900;
+      margin-top:4px;
+    }
+
+    .hero-kpis{
+      gap:8px !important;
+      margin-top:10px !important;
+    }
+
+    .hero-kpis .chip{
+      min-height:58px;
+      padding:9px 10px !important;
+      border-radius:16px;
+    }
+
+    .kpi-objetivo-blue{
+      background:linear-gradient(180deg, rgba(37,99,235,.30), rgba(37,99,235,.18));
+      border:1.5px solid rgba(96,165,250,.82);
+      box-shadow:
+        0 0 0 1px rgba(37,99,235,.16) inset,
+        0 8px 18px rgba(37,99,235,.14);
+    }
+
+    .kpi-avance-green{
+      background:linear-gradient(180deg, rgba(16,185,129,.26), rgba(16,185,129,.14));
+      border:1.5px solid rgba(52,211,153,.55);
+      box-shadow:
+        0 0 0 1px rgba(16,185,129,.14) inset,
+        0 8px 18px rgba(16,185,129,.14);
+    }
+
+    .kpi-avance-yellow{
+      background:linear-gradient(180deg, rgba(250,204,21,.26), rgba(250,204,21,.14));
+      border:1.5px solid rgba(250,204,21,.55);
+      box-shadow:
+        0 0 0 1px rgba(250,204,21,.14) inset,
+        0 8px 18px rgba(250,204,21,.14);
+    }
+
+    .kpi-avance-red{
+      background:linear-gradient(180deg, rgba(244,63,94,.26), rgba(244,63,94,.14));
+      border:1.5px solid rgba(251,113,133,.55);
+      box-shadow:
+        0 0 0 1px rgba(244,63,94,.14) inset,
+        0 8px 18px rgba(244,63,94,.14);
+    }
+
+    .content-area{
+      flex:1 1 auto;
+      min-height:0;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+    }
+
+    #filtrosView,
+    #resultadosView,
+    #detalleView{
+      flex:1 1 auto;
+      min-height:0;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+    }
+
+    #resultsContainer,
+    #detailPanel{
+      flex:1 1 auto;
+      min-height:0;
+      overflow:auto;
+      padding-right:2px;
+    }
+
+    .client-card{
+      padding:14px !important;
+      margin-bottom:8px;
+      border-radius:20px !important;
+    }
+
+    .client-card-active{
+      border-color:#22d3ee !important;
+      box-shadow:0 0 0 1px rgba(34,211,238,.14), 0 12px 30px rgba(0,0,0,.28);
+    }
+
+    .mini-progress{
+      height:10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.10);
+      overflow:hidden;
+    }
+
+    .title-main{
+      font-size:1rem;
+      line-height:1.05;
+    }
+
+    .title-sub{
+      font-size:11px;
+      line-height:1.1;
+    }
+
+    .brand-top{
+      font-size:9px;
+      letter-spacing:.18em;
+      line-height:1;
+    }
+
+    .logo-box{
+      height:42px;
+      width:42px;
+      border-radius:16px;
+      font-size:16px;
+    }
+
+    .section-title{
+      font-size:18px;
+      line-height:1;
+    }
+
+    .section-subtitle{
+      font-size:12px;
+      line-height:1.2;
+      margin-top:4px;
+    }
+
+    .top-header{
+      flex:0 0 auto;
+    }
+
+    .filters-highlight{
+      background:linear-gradient(180deg, rgba(30,41,59,.78), rgba(15,23,42,.96));
+      border:1px solid rgba(96,165,250,.22);
+      box-shadow:
+        0 0 0 1px rgba(59,130,246,.10) inset,
+        0 14px 28px rgba(0,0,0,.24);
+    }
+
+    .filters-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .filter-box{
+      padding:10px;
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(37,99,235,.10), rgba(15,23,42,.18));
+      border:1px solid rgba(96,165,250,.16);
+    }
+
+    .sticky-head{
+      position:sticky;
+      top:0;
+      z-index:10;
+      background:linear-gradient(180deg, rgba(7,17,31,.98), rgba(7,17,31,.90));
+      backdrop-filter:blur(12px);
+      padding-bottom:6px;
+    }
+
+    .detail-items{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .detail-item{
+      border-radius:18px;
+      padding:14px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .detail-item.ok{
+      border:1px solid rgba(16,185,129,.28);
+      background:rgba(16,185,129,.10);
+    }
+
+    .detail-item.no{
+      border:1px solid rgba(244,63,94,.28);
+      background:rgba(244,63,94,.10);
+    }
+
+    .badge-ok{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:42px;
+      height:30px;
+      padding:0 12px;
+      border-radius:999px;
+      background:#10b981;
+      color:#052e16;
+      font-size:12px;
+      font-weight:900;
+    }
+
+    .badge-no{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:42px;
+      height:30px;
+      padding:0 12px;
+      border-radius:999px;
+      background:#f43f5e;
+      color:white;
+      font-size:12px;
+      font-weight:900;
+    }
+
+.audit-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:900;
+  background:rgba(59,130,246,.18);
+  color:#bfdbfe;
+  border:1px solid rgba(96,165,250,.45);
+  box-shadow:0 6px 16px rgba(37,99,235,.12);
 }
 
-.card{
-background:#0f172a;
-border:1px solid #1e3a8a;
-border-radius:18px;
-padding:14px;
-margin-bottom:12px;
-box-shadow:0 8px 20px rgba(0,0,0,.25);
+.audit-dot{
+  width:8px;
+  height:8px;
+  border-radius:999px;
+  background:#60a5fa;
+  box-shadow:0 0 0 4px rgba(96,165,250,.15);
+  flex:0 0 auto;
 }
 
-.audit{
-border:2px solid #22c55e;
-box-shadow:0 0 0 2px rgba(34,197,94,.2);
+.client-card-auditable{
+  border:1.5px solid rgba(59,130,246,.55) !important;
+  box-shadow:
+    0 0 0 1px rgba(59,130,246,.18),
+    0 12px 30px rgba(0,0,0,.28);
 }
 
-.badge{
-display:inline-block;
-padding:4px 10px;
-border-radius:999px;
-font-size:11px;
-font-weight:700;
-margin-top:6px;
+.client-card-auditable.client-card-active{
+  border-color:#93c5fd !important;
+  box-shadow:
+    0 0 0 1px rgba(147,197,253,.28),
+    0 12px 30px rgba(0,0,0,.32);
 }
 
-.badge-aud{
-background:#22c55e;
-color:#001b08;
-}
-
-select{
-width:100%;
-padding:12px;
-border-radius:12px;
-background:#0f172a;
-color:white;
-border:1px solid #2563eb;
-margin-bottom:10px;
-}
-
-.top{
-position:sticky;
-top:0;
-background:#07111f;
-padding:10px;
-z-index:999;
-}
-
-.btn{
-width:100%;
-padding:12px;
-background:#2563eb;
-border:none;
-color:white;
-border-radius:12px;
-font-weight:700;
-cursor:pointer;
-}
-
-small{color:#94a3b8}
-</style>
+  </style>
 </head>
-
 <body>
+  <div class="app-shell">
 
-<div class="top">
+    <div id="filtrosView">
+      <div class="top-header">
+        <section class="glass rounded-[22px] p-3">
+          <div class="flex items-center gap-3">
+            <div class="logo-box bg-cyan-400 flex items-center justify-center text-slate-950 font-black">I</div>
+            <div class="min-w-0">
+              <div class="brand-top uppercase text-slate-400">Mobile Pro</div>
+              <h1 class="title-main font-black">Imperdonables</h1>
+              <p class="title-sub text-slate-400">Filtrá y visualizá clientes por ruta</p>
+            </div>
+          </div>
 
-<select id="filtroAudit">
-<option value="TODOS">Todos los clientes</option>
-<option value="SI">Solo auditables</option>
-</select>
+          <div class="hero-kpis grid grid-cols-2">
+            <div id="kpiObjetivoCard" class="chip">
+              <div class="text-[10px] text-slate-400">Objetivo</div>
+              <div id="kpiObjetivo" class="kpi-value-small">Seleccionar segmento</div>
+            </div>
+            <div id="kpiAvanceCard" class="chip">
+              <div class="text-[10px] text-slate-400">Avance</div>
+              <div id="kpiAvance" class="kpi-value">0,0%</div>
+            </div>
+            <div class="chip">
+              <div class="text-[10px] text-slate-400">Clientes</div>
+              <div id="kpiClientes" class="kpi-value">0</div>
+            </div>
+            <div class="chip">
+              <div class="text-[10px] text-slate-400">Cumplidos</div>
+              <div id="kpiCumplidos" class="kpi-value">0</div>
+            </div>
+          </div>
+        </section>
 
-<button class="btn" onclick="render()">Actualizar</button>
+        <section class="filters-highlight rounded-[22px] p-4 mt-2">
+          <div class="flex items-center justify-between mb-2">
+            <div>
+              <div class="text-[16px] font-black text-blue-300">Filtros principales</div>
+              <div class="text-[12px] text-slate-400 mt-1">Objetivo: seleccionar segmento, luego jefe y después ruta</div>
+            </div>
+            <div class="rounded-full bg-blue-500/15 border border-blue-400/30 text-blue-200 font-bold text-[10px] px-3 py-1">
+              Jefe / Ruta
+            </div>
+          </div>
 
-</div>
+          <div class="filters-grid">
+            <div class="filter-box">
+              <label class="filter-label">Segmento</label>
+              <select id="segmentoFilter" class="filter-control"></select>
+            </div>
 
-<div style="padding:10px" id="clientes"></div>
+            <div class="filter-box">
+              <label class="filter-label">Jefe</label>
+              <select id="jefeFilter" class="filter-control"></select>
+            </div>
 
-<script>
+            <div class="filter-box">
+              <label class="filter-label">Ruta</label>
+              <select id="rutaFilter" class="filter-control"></select>
+            </div>
+          </div>
 
-const auditables = [
-"3137513",
-"3134404",
-"3195677",
-"3199087",
-"3139681",
-"3133715",
-"3187093"
-];
+          <div class="grid grid-cols-2 gap-3 mt-4">
+            <button id="verClientesBtn" class="btn btn-primary-blue">Ver clientes</button>
+            <button id="reloadBtn" class="btn btn-secondary-blue">Recargar</button>
+          </div>
+        </section>
+      </div>
 
-const clientes = [
+      <div class="content-area mt-2">
+        <div class="glass rounded-[22px] p-4 h-full flex items-center justify-center text-center text-slate-400">
+          <div>
+            <div class="text-base font-black text-slate-200">Elegí los filtros</div>
+            <div class="text-sm mt-2">Recomendación visual: primero seleccionar segmento, después jefe y luego ruta.</div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-{outnum:"3137513",nombre:"RONCEDO ALVARO",ruta:"41",avance:82},
-{outnum:"3134404",nombre:"BOTTINI",ruta:"44",avance:55},
-{outnum:"3195677",nombre:"ARGAÑARAZ",ruta:"45",avance:71},
-{outnum:"3199087",nombre:"TODO PAN",ruta:"47",avance:90},
-{outnum:"3139681",nombre:"EL MALIK",ruta:"48",avance:43},
-{outnum:"3133715",nombre:"WU LIQING",ruta:"49",avance:62},
-{outnum:"3187093",nombre:"FERRER",ruta:"42",avance:77},
+    <div id="resultadosView" class="hidden-view">
+      <div class="top-header sticky-head">
+        <div class="glass rounded-[22px] p-3">
+          <div class="flex items-center gap-3">
+            <button id="backToFiltersBtn" class="btn-back">⬅ Volver</button>
+            <div class="min-w-0 flex-1">
+              <div id="resultsTitle" class="section-title font-black">Clientes filtrados</div>
+              <div id="resultsSubtitle" class="section-subtitle text-slate-400">0 clientes encontrados</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-{outnum:"3001111",nombre:"CLIENTE NORMAL 1",ruta:"41",avance:61},
-{outnum:"3001112",nombre:"CLIENTE NORMAL 2",ruta:"41",avance:72},
-{outnum:"3001113",nombre:"CLIENTE NORMAL 3",ruta:"44",avance:88}
+      <div class="content-area mt-1">
+        <div id="resultsContainer" class="scroll-soft"></div>
+      </div>
+    </div>
 
-];
+    <div id="detalleView" class="hidden-view">
+      <div class="top-header sticky-head">
+        <div class="glass rounded-[22px] p-3">
+          <div class="flex items-center gap-3">
+            <button id="backToResultsBtn" class="btn-back">⬅ Volver</button>
+            <div class="min-w-0 flex-1">
+              <div class="section-title font-black">Detalle del cliente</div>
+              <div class="section-subtitle text-slate-400">Imperdonables y avance</div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-function render(){
+      <div class="content-area mt-1">
+        <div id="detailPanel" class="scroll-soft">
+          <div class="glass rounded-[24px] p-5 text-center text-slate-400">Seleccioná un cliente.</div>
+        </div>
+      </div>
+    </div>
 
-let filtro=document.getElementById("filtroAudit").value;
+  </div>
 
-let data=clientes.filter(c=>{
-if(filtro==="SI") return auditables.includes(c.outnum);
-return true;
-});
+  <script>
+    const CONFIG = {
+      sheets: [
+        { segmento: 'AUTOSERVICIO', url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=1897406888&single=true&output=csv' },
+        { segmento: 'ORO',          url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=1674759979&single=true&output=csv' },
+        { segmento: 'PLATA',        url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=2007565552&single=true&output=csv' },
+        { segmento: 'KIOSCO',       url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=1866612683&single=true&output=csv' },
+        { segmento: 'BRONCE',       url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=1006300389&single=true&output=csv' }
+      ],
+      objetivosSegmento: {
+        AUTOSERVICIO: 70.25,
+        ORO: 73.52,
+        PLATA: 71.55,
+        BRONCE: 43.90,
+        KIOSCO: 36.90
+      },
+      auditableOutnums: ['3137513', '3134214', '3133982', '3135071', '3195518', '3138858', '3134150', '3139648', '3136029', '3101626', '3195677', '3199152', '3101876', '3139416', '3139425', '3137186', '3135937', '3135303', '3294950', '3137612', '3134640', '3139502', '3137151', '3193983', '3170993', '3197198', '3135448', '3192202', '3136174', '3294390', '3135526', '3136325', '3137156', '3286496', '3134309', '3193920', '3137469', '3136765', '3137131', '3177079', '3134468', '3134245', '3171130', '3133715', '3136307', '3101426', '3295420', '3101417', '3101618', '3136455', '3133901', '3110220', '3134113', '3138565', '3136966', '3135947', '3136056', '3287320', '3177033', '3198499', '3151425', '3194551', '3197575', '3137134', '3135283', '3135460', '3287794', '3139849', '3134815', '3187901', '3139893', '3137387', '3101776', '3170688', '3193570', '3133853', '3139225', '3286497', '3174500', '3191066', '3196228', '3282040', '3137565', '3177426', '3135102', '3284424', '3194292', '3187093', '3282945', '3135346', '3135339', '3196265', '3196131', '3135433', '3283792', '3110211', '3175162', '3100979', '3135879', '3187880', '3283769', '3136308', '3139442', '3176945', '3199686', '3135478', '3186682', '3110107', '3198811', '3191950', '3194246', '3140584', '3135959', '3194663', '3136151', '3194378', '3139521', '3136011', '3287266', '3195198', '3195148', '3110093', '3139428', '3139678', '3185889', '3137159', '3199752', '3199830', '3135377', '3295401', '3172442', '3199879', '3186230', '3196419', '3140469', '3293889', '3133717', '3133735', '3134307', '3158506', '3195005', '3191138', '3282936', '3136062', '3284567', '3195945', '3187033', '3108908', '3135190', '3195765', '3194596', '3135452', '3135204', '3195888', '3195082', '3199017', '3185804', '3185857', '3195896', '3171309', '3195257', '3134486', '3286656', '3137772', '3196364', '3135732', '3198447', '3184563', '3135816', '3105375', '3137580', '3140021', '3137038', '3139827', '3295280', '3194461', '3139855', '3148251', '3134285', '3155381', '3139969', '3286023', '3196397', '3139586', '3139682', '3133807', '3172334', '3283794', '3101482', '3146922', '3134589', '3136168', '3194521', '3191929', '3148580', '3195553', '3184863', '3283805', '3135245', '3136373', '3141157', '3282909', '3135826', '3290700', '3195816', '3198663', '3134520', '3295321', '3136270', '3133809', '3193789', '3135088', '3197590', '3136052', '3287260', '3284665', '3198492', '3193244', '3282947', '3184492', '3177454', '3135889', '3286635', '3139519', '3137560', '3195830', '3193928', '3177424', '3137500', '3100944', '3283806', '3286436', '3101452', '3199635', '3135121', '3101756', '3196513', '3191621', '3134209', '3194949', '3135246', '3138906', '3191290', '3134386', '3134742', '3139388', '3195857', '3178592', '3100946', '3137019', '3101445', '3108333', '3185766', '3185880', '3286277', '3196252', '3136899', '3140848', '3136438', '3135870', '3284459', '3136160', '3135927', '3135819', '3148364', '3115685', '3195116', '3195754', '3287345', '3146509', '3177425', '3282919', '3170099', '3174139', '3135534', '3153768', '3194833', '3194575', '3149882', '3284190', '3290012', '3135938', '3100959', '3283589', '3135090', '3135491', '3191487', '3287221', '3137712', '3135263', '3137330', '3170565', '3293179', '3287166', '3135626', '3194633', '3295467', '3110180', '3137157', '3135281', '3135991', '3292758', '3196014', '3199972', '3135719', '3191599', '3197374', '3170125', '3174306', '3133913', '3199669', '3134625', '3192009', '3177365', '3137115', '3136356', '3134428', '3101203', '3139989', '3196098', '3139735', '3284679', '3136345', '3199802', '3195263', '3287827', '3198723', '3137220', '3199136', '3153264', '3199891', '3134370', '3199854', '3185936', '3199817', '3198759', '3136792', '3110213', '3286823', '3290259', '3100993', '3191777', '3199734', '3194531', '3196472', '3178169', '3139865', '3137460', '3195170', '3193181', '3117736', '3177423', '3175157', '3196655', '3137058', '3136779', '3139438', '3139774', '3139791', '3185216', '3199835', '3198762', '3198676', '3186869', '3135912', '3134513', '3292824', '3135845', '3283803', '3144052', '3196407', '3134312', '3191432', '3135963', '3195093', '3139926', '3134718', '3137290', '3196473', '3185143', '3197966', '3287182', '3134572', '3135453', '3195596', '3101161', '3138432', '3135487', '3118791', '3195877', '3286677', '3171270', '3197599', '3140555', '3140038', '3193282', '3177652', '3139437', '3135458', '3176257', '3153596', '3136048', '3137747', '3140495', '3177553', '3191305', '3193565', '3137132', '3193727', '3134191', '3137435', '3137598', '3135847', '3196443', '3178400', '3170010', '3174545', '3136044', '3198586', '3283156', '3194331', '3139696', '3137140', '3148433', '3198906', '3194079', '3287842', '3133693', '3197583', '3101670', '3140486', '3101737', '3196525', '3173971', '3101846', '3101210', '3191982', '3134246', '3136920', '3136231', '3195741', '3171658', '3142693', '3186695', '3106978', '3199443', '3143734', '3198736', '3286246', '3284643', '3136909', '3158350', '3136145', '3194493', '3145893', '3179145', '3136159', '3135874', '3101312', '3139951', '3178256', '3292976', '3137318', '3195008', '3196177', '3199293', '3139713', '3134591', '3195038', '3138501', '3155022', '3171831', '3198533', '3198563', '3136794', '3139681', '3136334', '3291684', '3286808', '3137089', '3135747', '3151476', '3136322', '3192298', '3145469', '3174459', '3186806', '3294725', '3170431', '3187813', '3190590', '3137076', '3137466', '3137954', '3159832', '3295190', '3134372', '3134106', '3194710', '3136878', '3139708', '3196624', '3135256', '3178835', '3136860', '3178446', '3135958', '3146070', '3134152', '3136117', '3134060', '3195705', '3136266', '3134667', '3134173', '3136873', '3137123', '3284563', '3284677', '3139587', '3198976', '3134594', '3192465', '3139135', '3198604', '3194008', '3135437', '3137286', '3139501', '3193628', '3139476', '3185683', '3294172', '3190844', '3136074', '3133958', '3283055', '3178323', '3178317', '3144961', '3179541', '3135516', '3136703', '3137354', '3139947', '3185808', '3134394', '3294666', '3190865', '3134219', '3137033', '3177258', '3134527', '3293452', '3196036', '3134754', '3134709', '3136038', '3199397', '3139548', '3135376', '3187289', '3134649', '3137810', '3197581', '3179790', '3191849', '3198791', '3139590', '3136963', '3198893', '3197595', '3185546', '3172236', '3136960', '3137996', '3133995', '3135774', '3154441', '3134661', '3286484', '3195961', '3137396', '3137476', '3198785', '3195576', '3137431', '3134262', '3154446', '3170675', '3101617', '3193400', '3136018', '3292562', '3136158', '3282921', '3115991', '3139753', '3139636', '3141908', '3135309', '3199683', '3138150', '3137363', '3196240', '3101680', '3101667', '3198037', '3287839', '3283753', '3295278', '3198521', '3138615', '3134352', '3185901', '3135242', '3142720', '3133884', '3196214', '3199296', '3173786', '3286818', '3184499', '3156851', '3150712', '3187984', '3198588', '3101368', '3133882', '3198910', '3137403', '3173735', '3136847', '3137306', '3115009', '3173694', '3190692', '3295480', '3101480', '3177002', '3185815', '3135864', '3145569', '3185704', '3141237', '3134233', '3140852', '3135067', '3101878', '3139836', '3136975', '3197297', '3134730', '3137097', '3139792', '3191511', '3138293', '3139873', '3283810', '3135731', '3185721', '3135984', '3134143', '3142903', '3134413', '3136447', '3287181', '3135384', '3136955', '3179274', '3134329', '3135866', '3135328', '3286793', '3191719', '3194449', '3283635', '3283487', '3134768', '3139624', '3178579', '3284654', '3100996', '3149396', '3101520', '3284635', '3135225', '3134451', '3282780', '3134229', '3174533', '3175976', '3194831', '3135530', '3142835', '3198941', '3176407', '3110055', '3135232', '3148564', '3287805', '3135080', '3175089', '3199324', '3133873', '3101306', '3134333', '3135567', '3198398', '3137141', '3134707', '3135159', '3199566', '3146085', '3135925', '3133678', '3290402', '3134556', '3195391', '3137125', '3135978', '3191271', '3196307', '3282228', '3282415', '3283393', '3134412', '3134278', '3134456', '3134837', '3286820', '3102790', '3185313', '3137320', '3174919', '3134618', '3194683', '3172254', '3173861', '3199792', '3282754', '3171736', '3134183', '3185334', '3195707', '3136267', '3286458', '3191960', '3175373', '3135955', '3136331', '3139988', '3135951', '3139903', '3153473', '3284440', '3139551', '3135114', '3134216', '3101774', '3192235', '3198790', '3292587', '3199973', '3159524', '3139657', '3142823', '3191523', '3139460', '3287789', '3137062', '3138918', '3190828', '3198864', '3287247', '3292552', '3293120', '3145900', '3199746', '3137471', '3194874', '3151869', '3195252', '3134789', '3136393', '3111204', '3135171', '3136344', '3283643', '3284616', '3136952', '3185121', '3193734', '3199858', '3100942', '3136175', '3136849', '3135327', '3135993', '3152442', '3134084', '3184608', '3139581', '3170812', '3100923', '3137194', '3139767', '3136132', '3136365', '3101555', '3158487', '3176189', '3101248', '3139635', '3185782', '3196799', '3284619', '3282544', '3101663', '3196475', '3134387', '3191903', '3196401', '3198804', '3147615', '3134153', '3172362', '3134510', '3136341', '3137264', '3185797', '3282230', '3135123', '3137244', '3193893', '3135632', '3101418', '3110187', '3138409', '3191636', '3134218', '3134397', '3134435', '3176106', '3198574', '3186174', '3133656', '3136058', '3137238', '3137312', '3185773', '3193912', '3134414', '3134008', '3196301', '3186965', '3153810', '3190815', '3199297', '3135363', '3137432', '3135093', '3177389', '3137410', '3135708', '3192211', '3198557', '3194827', '3136323', '3136858', '3101821', '3134047', '3138454', '3136752', '3135469', '3139991', '3196078', '3133670', '3134494', '3136536', '3170864', '3192133', '3135895', '3136189', '3137367', '3136763', '3139417', '3286509', '3286771', '3135215', '3139305', '3198957', '3133862', '3191392', '3137498', '3101324', '3135599', '3193990', '3136688', '3138431', '3174550', '3187980', '3135520', '3139175', '3177479', '3193047', '3196442', '3196674', '3135678', '3135770', '3148280', '3284142', '3134072', '3139558', '3134342', '3177016', '3194254', '3133811', '3133902', '3139686', '3139483', '3139699', '3195369', '3197246', '3284176', '3134793', '3136165', '3136403', '3145798'],
+      headerAliases: {}
+    };
 
-let html="";
+    let rawData = [];
+    let filteredData = [];
+    let selectedKey = null;
 
-data.forEach(c=>{
+    function norm(v){ return String(v ?? '').trim(); }
+    function normUpper(v){ return norm(v).toUpperCase(); }
 
-let aud=auditables.includes(c.outnum);
+    function pct(n, d){
+      if (!d || d <= 0) return 0;
+      return (n / d) * 100;
+    }
 
-html+=`
-<div class="card ${aud?'audit':''}">
-<div style="font-size:18px;font-weight:700">${c.nombre}</div>
-<small>Outnum ${c.outnum} · Ruta ${c.ruta}</small>
+    function formatPct(value){
+      const num = Number(value || 0);
+      return `${num.toFixed(1).replace('.', ',')}%`;
+    }
 
-${aud?'<div class="badge badge-aud">CLIENTE AUDITABLE</div>':''}
+    function esc(v){
+      return String(v ?? '')
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#039;');
+    }
 
-<div style="margin-top:10px">
-Avance: <b>${c.avance}%</b>
-</div>
+    function uniq(values){
+      return [...new Set(values.filter(Boolean))]
+        .sort((a,b) => String(a).localeCompare(String(b), 'es', { numeric:true }));
+    }
 
-<div style="height:10px;background:#1e293b;border-radius:99px;margin-top:8px;overflow:hidden">
-<div style="width:${c.avance}%;height:100%;background:${c.avance>=80?'#22c55e':c.avance>=60?'#eab308':'#ef4444'}"></div>
-</div>
+    function getDisplayName(name){
+      return CONFIG.headerAliases[name] || name;
+    }
 
-</div>
-`;
+    function getObjetivoSegmento(segmento){
+      return Number(CONFIG.objetivosSegmento[segmento] || 0);
+    }
 
-});
 
-document.getElementById("clientes").innerHTML=html;
-
+function isAuditableOutnum(outnum){
+  return CONFIG.auditableOutnums.includes(String(outnum || '').trim());
 }
 
-render();
+    function getObjetivoTextoSegmento(){
+      const segmento = document.getElementById('segmentoFilter').value;
+      if (segmento === 'TODOS') return 'Seleccionar segmento';
+      return formatPct(getObjetivoSegmento(segmento));
+    }
 
-</script>
+    function getColorClassByObjetivo(segmento, porcentaje){
+      const objetivo = getObjetivoSegmento(segmento);
+      const diferencia = objetivo - porcentaje;
 
+      if (porcentaje >= objetivo) return 'bg-emerald-500';
+      if (diferencia <= 5) return 'bg-amber-400';
+      return 'bg-rose-500';
+    }
+
+    function getAvanceKpiClass(){
+      const segmento = document.getElementById('segmentoFilter').value;
+      if (segmento === 'TODOS') return '';
+
+      const objetivo = getObjetivoSegmento(segmento);
+      const totalImperdonables = filteredData.reduce((a, b) => a + Number(b.totalImperdonables || 0), 0);
+      const totalCumplidos = filteredData.reduce((a, b) => a + Number(b.cumplidos || 0), 0);
+      const avance = pct(totalCumplidos, totalImperdonables);
+      const diferencia = objetivo - avance;
+
+      if (avance >= objetivo) return 'kpi-avance-green';
+      if (diferencia <= 5) return 'kpi-avance-yellow';
+      return 'kpi-avance-red';
+    }
+
+    function parseCSVLine(line){
+      const result = [];
+      let current = '';
+      let inQuotes = false;
+
+      for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        const next = line[i + 1];
+
+        if (char === '"') {
+          if (inQuotes && next === '"') {
+            current += '"';
+            i++;
+          } else {
+            inQuotes = !inQuotes;
+          }
+        } else if (char === ',' && !inQuotes) {
+          result.push(current);
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+
+      result.push(current);
+      return result;
+    }
+
+    function parseCSV(text){
+      return text
+        .replace(/^\uFEFF/, '')
+        .split(/\r?\n/)
+        .filter(line => line.trim() !== '')
+        .map(parseCSVLine);
+    }
+
+    function getBadgeHtml(done){
+      return done
+        ? '<span class="badge-ok">OK</span>'
+        : '<span class="badge-no">NO</span>';
+    }
+
+    function isBiBooleanValue(rawVal){
+      const v = normUpper(rawVal);
+      return ['0', '0.0', '1', '1.0', 'SI', 'NO', 'OK', 'CUMPLIDO'].includes(v);
+    }
+
+    function isDoneValue(rawVal){
+      const v = normUpper(rawVal);
+      return ['1', '1.0', 'SI', 'OK', 'CUMPLIDO'].includes(v);
+    }
+
+    function findColumnIndex(headersA, headersB, target){
+      const t = normUpper(target);
+      for (let i = 0; i < Math.max(headersA.length, headersB.length); i++) {
+        const a = normUpper(headersA[i]);
+        const b = normUpper(headersB[i]);
+        if (a === t || b === t) return i;
+      }
+      return -1;
+    }
+
+    function getImperdonableName(top, bottom, idx){
+      const a = norm(top[idx]);
+      const b = norm(bottom[idx]);
+      return [a, b].filter(Boolean).join(' ').trim() || `Imperdonable ${idx + 1}`;
+    }
+
+    function buildClientRecords(rows, segmento){
+      if (!rows.length || rows.length < 3) return [];
+
+      const row1 = rows[0] || [];
+      const row2 = rows[1] || [];
+      const row3 = rows[2] || [];
+
+      const hasThreeHeaderRows = normUpper(row3[0]) === 'DETALLE';
+      const metaHeaderRow = hasThreeHeaderRows ? row3 : row2;
+      const displayHeaderTop = row1;
+      const displayHeaderBottom = hasThreeHeaderRows ? row2 : [];
+      const dataRows = rows.slice(hasThreeHeaderRows ? 3 : 2);
+
+      const detalleIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'DETALLE');
+      const territorioIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'TERRITORIO');
+      const cediIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'CEDI');
+      const jefeIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'JEFE');
+      const rutaIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'RUTA');
+      const outclIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'OUT-CL');
+
+      if (outclIdx === -1) return [];
+
+      const totalIdx = findColumnIndex(displayHeaderTop, displayHeaderBottom, 'Total');
+      const dynamicStart = outclIdx + 1;
+      const dynamicEndExclusive = totalIdx > -1 ? totalIdx : metaHeaderRow.length;
+
+      let lastDetalle = '';
+      let lastTerritorio = '';
+      let lastCedi = '';
+      let lastJefe = '';
+      let lastRuta = '';
+
+      const clients = [];
+
+      for (const row of dataRows) {
+        const outcl = norm(row[outclIdx]);
+        if (!outcl) continue;
+
+        lastDetalle = (detalleIdx > -1 ? norm(row[detalleIdx]) : '') || lastDetalle;
+        lastTerritorio = (territorioIdx > -1 ? norm(row[territorioIdx]) : '') || lastTerritorio;
+        lastCedi = (cediIdx > -1 ? norm(row[cediIdx]) : '') || lastCedi;
+        lastJefe = (jefeIdx > -1 ? norm(row[jefeIdx]) : '') || lastJefe;
+        lastRuta = (rutaIdx > -1 ? norm(row[rutaIdx]) : '') || lastRuta;
+
+        const parts = outcl.split(' - ');
+        const outnum = norm(parts[0]);
+        const cliente = norm(parts.slice(1).join(' - ')) || outcl;
+
+        const imperdonables = [];
+        let cumplidos = 0;
+        let totalValidos = 0;
+
+        for (let i = dynamicStart; i < dynamicEndExclusive; i++) {
+          const nombre = getImperdonableName(displayHeaderTop, displayHeaderBottom, i);
+          const rawVal = norm(row[i]);
+
+          if (!isBiBooleanValue(rawVal)) continue;
+
+          totalValidos++;
+          const done = isDoneValue(rawVal);
+          if (done) cumplidos++;
+
+          imperdonables.push({ nombre, cumplido: done, rawVal });
+        }
+
+        clients.push({
+          key: `${segmento}|${lastCedi}|${lastRuta}|${outnum}|${cliente}`,
+          segmento,
+          outnum,
+          cliente,
+          ruta: lastRuta,
+          jefe: lastJefe,
+          detalle: lastDetalle,
+          territorio: lastTerritorio,
+          cedi: lastCedi,
+          totalImperdonables: totalValidos,
+          cumplidos,
+          porcentaje: pct(cumplidos, totalValidos),
+          auditable: isAuditableOutnum(outnum),
+          imperdonables
+        });
+      }
+
+      return clients;
+    }
+
+    async function fetchCSV(url){
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) throw new Error('No se pudo leer el CSV');
+      const text = await res.text();
+      return parseCSV(text);
+    }
+
+    async function loadData(){
+      rawData = [];
+      filteredData = [];
+
+      for (const sheet of CONFIG.sheets) {
+        try {
+          const rows = await fetchCSV(sheet.url);
+          const clients = buildClientRecords(rows, sheet.segmento);
+          rawData.push(...clients);
+        } catch (err) {
+          console.error('Error en hoja', sheet.segmento, err);
+        }
+      }
+
+      populateFilters();
+      applyFilters();
+
+      if (filteredData.length && !selectedKey) selectedKey = filteredData[0].key;
+      renderDetail();
+    }
+
+    function fillSelect(el, values, firstLabel){
+      el.innerHTML =
+        `<option value="TODOS">${firstLabel}</option>` +
+        values.map(v => `<option value="${esc(v)}">${esc(v)}</option>`).join('');
+    }
+
+    function populateFilters(){
+      fillSelect(
+        document.getElementById('segmentoFilter'),
+        uniq(rawData.map(x => x.segmento)),
+        'Todos los segmentos'
+      );
+
+      updateJefeFilter();
+      updateRutaFilter();
+    }
+
+    function getBaseBySegmento(){
+      const segmento = document.getElementById('segmentoFilter').value;
+      return rawData.filter(item =>
+        segmento === 'TODOS' || item.segmento === segmento
+      );
+    }
+
+    function getBaseBySegmentoJefe(){
+      const segmento = document.getElementById('segmentoFilter').value;
+      const jefe = document.getElementById('jefeFilter').value;
+
+      return rawData.filter(item =>
+        (segmento === 'TODOS' || item.segmento === segmento) &&
+        (jefe === 'TODOS' || item.jefe === jefe)
+      );
+    }
+
+    function updateJefeFilter(){
+      const jefeSelect = document.getElementById('jefeFilter');
+      const jefeActual = jefeSelect.value || 'TODOS';
+      const base = getBaseBySegmento();
+      const jefes = uniq(base.map(x => x.jefe));
+
+      fillSelect(jefeSelect, jefes, 'Todos los jefes');
+
+      if (jefes.includes(jefeActual)) {
+        jefeSelect.value = jefeActual;
+      } else {
+        jefeSelect.value = 'TODOS';
+      }
+    }
+
+    function updateRutaFilter(){
+      const rutaSelect = document.getElementById('rutaFilter');
+      const rutaActual = rutaSelect.value || 'TODOS';
+      const base = getBaseBySegmentoJefe();
+      const rutas = uniq(base.map(x => x.ruta));
+
+      fillSelect(rutaSelect, rutas, 'Todas las rutas');
+
+      if (rutas.includes(rutaActual)) {
+        rutaSelect.value = rutaActual;
+      } else {
+        rutaSelect.value = 'TODOS';
+      }
+    }
+
+    function applyFilters(){
+      const segmento = document.getElementById('segmentoFilter').value;
+      const jefe = document.getElementById('jefeFilter').value;
+      const ruta = document.getElementById('rutaFilter').value;
+
+      filteredData = rawData.filter(item => {
+        return (segmento === 'TODOS' || item.segmento === segmento) &&
+               (jefe === 'TODOS' || item.jefe === jefe) &&
+               (ruta === 'TODOS' || item.ruta === ruta);
+      }).sort((a, b) => {
+        if (String(a.ruta) !== String(b.ruta)) {
+          return String(a.ruta).localeCompare(String(b.ruta), 'es', { numeric:true });
+        }
+        return String(a.cliente).localeCompare(String(b.cliente), 'es');
+      });
+
+      if (selectedKey && !filteredData.some(x => x.key === selectedKey)) {
+        selectedKey = filteredData[0]?.key || null;
+      }
+
+      renderKPIs();
+      renderResults();
+      renderDetail();
+    }
+
+    function renderKPIs(){
+      const totalClientes = filteredData.length;
+      const totalCumplidos = filteredData.reduce((a, b) => a + Number(b.cumplidos || 0), 0);
+      const totalImperdonables = filteredData.reduce((a, b) => a + Number(b.totalImperdonables || 0), 0);
+      const avance = pct(totalCumplidos, totalImperdonables);
+      const segmento = document.getElementById('segmentoFilter').value;
+
+      document.getElementById('kpiClientes').textContent = totalClientes;
+      document.getElementById('kpiCumplidos').textContent = totalCumplidos;
+      document.getElementById('kpiAvance').textContent = formatPct(avance);
+      document.getElementById('kpiObjetivo').textContent = getObjetivoTextoSegmento();
+
+      const objetivoCard = document.getElementById('kpiObjetivoCard');
+      const avanceCard = document.getElementById('kpiAvanceCard');
+
+      objetivoCard.className = 'chip';
+      avanceCard.className = 'chip';
+
+      objetivoCard.classList.add('kpi-objetivo-blue');
+
+      if (segmento !== 'TODOS') {
+        avanceCard.classList.add(getAvanceKpiClass());
+      }
+    }
+
+    function renderResults(){
+      const box = document.getElementById('resultsContainer');
+      const ruta = document.getElementById('rutaFilter').value;
+      const segmento = document.getElementById('segmentoFilter').value;
+
+      document.getElementById('resultsTitle').textContent =
+        ruta !== 'TODOS'
+          ? `Clientes de Ruta ${ruta}`
+          : 'Clientes filtrados';
+
+      const auditablesCount = filteredData.filter(x => x.auditable).length;
+      document.getElementById('resultsSubtitle').textContent =
+        `${filteredData.length} cliente(s) · Auditables ${auditablesCount}` +
+        (segmento !== 'TODOS' ? ` · Segmento ${segmento}` : '');
+
+      if (!filteredData.length) {
+        box.innerHTML = '<div class="glass rounded-[24px] p-5 text-center text-slate-400">No hay clientes con esos filtros.</div>';
+        return;
+      }
+
+      box.innerHTML = filteredData.map(item => {
+        const barColor = getColorClassByObjetivo(item.segmento, item.porcentaje);
+        const pending = Math.max(item.totalImperdonables - item.cumplidos, 0);
+        const activeClass = selectedKey === item.key ? 'client-card-active' : 'border-white/5';
+        const auditableClass = item.auditable ? 'client-card-auditable' : '';
+        const safeKey = item.key.replace(/'/g, "\\'");
+        const objetivo = getObjetivoSegmento(item.segmento);
+
+        return `
+          <button onclick="selectClient('${safeKey}')" class="client-card glass w-full text-left border ${activeClass} ${auditableClass}">
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0 flex-1">
+                <div class="text-[11px] text-slate-400 uppercase tracking-wide">${esc(item.segmento)} · ${esc(item.cedi || '-')} · Ruta ${esc(item.ruta || '-')}</div>
+                <div class="font-black text-[18px] leading-tight mt-1">${esc(item.cliente || '-')}</div>
+                ${item.auditable ? `<div class="audit-badge mt-2"><span class="audit-dot"></span>Cliente auditable</div>` : ''}
+                <div class="text-[12px] text-slate-300 mt-2">Outnum ${esc(item.outnum || '-')} · ${esc(item.jefe || '-')}</div>
+                <div class="text-[11px] text-slate-400 mt-2">Objetivo: ${formatPct(objetivo)} · Avance: ${formatPct(item.porcentaje)}</div>
+                <div class="text-[11px] text-slate-500 mt-1 line-clamp-1">${esc(item.detalle || '-')} · ${esc(item.territorio || '-')}</div>
+              </div>
+              <div class="shrink-0 rounded-2xl px-3 py-2 ${barColor} text-slate-950 font-black text-[13px]">${formatPct(item.porcentaje)}</div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 mt-4">
+              <div class="chip rounded-2xl p-3">
+                <div class="text-[10px] text-slate-400">Total</div>
+                <div class="text-lg font-black mt-1">${item.totalImperdonables}</div>
+              </div>
+              <div class="chip rounded-2xl p-3">
+                <div class="text-[10px] text-slate-400">OK</div>
+                <div class="text-lg font-black mt-1">${item.cumplidos}</div>
+              </div>
+              <div class="chip rounded-2xl p-3">
+                <div class="text-[10px] text-slate-400">Pend.</div>
+                <div class="text-lg font-black mt-1">${pending}</div>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <div class="flex items-center justify-between text-[11px] text-slate-400 mb-2">
+                <span>Avance</span>
+                <span>${item.cumplidos}/${item.totalImperdonables}</span>
+              </div>
+              <div class="mini-progress">
+                <div class="h-full ${barColor}" style="width:${Math.min(item.porcentaje, 100)}%"></div>
+              </div>
+            </div>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderDetail(){
+      const panel = document.getElementById('detailPanel');
+      const item = rawData.find(x => x.key === selectedKey) || filteredData[0];
+
+      if (!item) {
+        panel.innerHTML = '<div class="glass rounded-[24px] p-5 text-center text-slate-400">Seleccioná un cliente.</div>';
+        return;
+      }
+
+      selectedKey = item.key;
+      const barColor = getColorClassByObjetivo(item.segmento, item.porcentaje);
+      const pendientes = Math.max(item.totalImperdonables - item.cumplidos, 0);
+      const objetivo = getObjetivoSegmento(item.segmento);
+
+      panel.innerHTML = `
+        <div class="space-y-3 pb-4">
+          <div class="glass rounded-[24px] p-4">
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0 flex-1">
+                <div class="text-[11px] text-slate-400 uppercase tracking-wide">${esc(item.segmento)} · ${esc(item.cedi || '-')} · Ruta ${esc(item.ruta || '-')}</div>
+                <div class="text-[20px] font-black leading-tight mt-1">${esc(item.cliente || '-')}</div>
+                ${item.auditable ? `<div class="audit-badge mt-2"><span class="audit-dot"></span>Cliente auditable</div>` : ''}
+                <div class="text-sm text-slate-300 mt-1">Outnum ${esc(item.outnum || '-')}</div>
+                <div class="text-sm text-slate-400">Jefe: ${esc(item.jefe || '-')}</div>
+                <div class="text-sm text-slate-400">Objetivo segmento: ${formatPct(objetivo)}</div>
+                <div class="text-sm text-slate-400">Avance actual: ${formatPct(item.porcentaje)}</div>
+                <div class="text-sm text-slate-400">Detalle: ${esc(item.detalle || '-')} · Territorio: ${esc(item.territorio || '-')}</div>
+                <div class="text-sm text-slate-400">Cedi: ${esc(item.cedi || '-')}</div>
+              </div>
+              <div class="shrink-0 rounded-2xl px-3 py-2 ${barColor} text-slate-950 font-black">${formatPct(item.porcentaje)}</div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2 mt-4">
+              <div class="chip rounded-2xl p-3">
+                <div class="text-[10px] text-slate-400">Total</div>
+                <div class="text-xl font-black mt-1">${item.totalImperdonables}</div>
+              </div>
+              <div class="chip rounded-2xl p-3">
+                <div class="text-[10px] text-slate-400">OK</div>
+                <div class="text-xl font-black mt-1">${item.cumplidos}</div>
+              </div>
+              <div class="chip rounded-2xl p-3">
+                <div class="text-[10px] text-slate-400">Pend.</div>
+                <div class="text-xl font-black mt-1">${pendientes}</div>
+              </div>
+            </div>
+
+            <div class="mt-4">
+              <div class="flex items-center justify-between text-[11px] text-slate-400 mb-2">
+                <span>Avance general</span>
+                <span>${item.cumplidos}/${item.totalImperdonables}</span>
+              </div>
+              <div class="mini-progress">
+                <div class="h-full ${barColor}" style="width:${Math.min(item.porcentaje,100)}%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass rounded-[24px] p-4">
+            <div class="flex items-center justify-between mb-3">
+              <div class="text-base font-black">Imperdonables</div>
+              <div class="text-xs text-slate-400">Rojo = pendiente · Verde = cumplido</div>
+            </div>
+
+            <div class="detail-items">
+              ${
+                item.imperdonables.length
+                  ? item.imperdonables.map(imp => `
+                    <div class="detail-item ${imp.cumplido ? 'ok' : 'no'}">
+                      <div class="min-w-0 flex-1">
+                        <div class="font-bold text-sm leading-tight ${imp.cumplido ? 'line-through text-emerald-300' : 'text-rose-200'}">${esc(getDisplayName(imp.nombre))}</div>
+                        <div class="text-[11px] text-slate-400 mt-1">Valor base: ${esc(imp.rawVal || '-')}</div>
+                      </div>
+                      <div class="shrink-0">${getBadgeHtml(imp.cumplido)}</div>
+                    </div>
+                  `).join('')
+                  : '<div class="text-slate-400 text-sm">Sin imperdonables activos.</div>'
+              }
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function showFiltros(){
+      document.getElementById('filtrosView').classList.remove('hidden-view');
+      document.getElementById('resultadosView').classList.add('hidden-view');
+      document.getElementById('detalleView').classList.add('hidden-view');
+    }
+
+    function showResultados(){
+      document.getElementById('filtrosView').classList.add('hidden-view');
+      document.getElementById('resultadosView').classList.remove('hidden-view');
+      document.getElementById('detalleView').classList.add('hidden-view');
+    }
+
+    function showDetalle(){
+      document.getElementById('filtrosView').classList.add('hidden-view');
+      document.getElementById('resultadosView').classList.add('hidden-view');
+      document.getElementById('detalleView').classList.remove('hidden-view');
+    }
+
+    function selectClient(key){
+      selectedKey = key;
+      renderResults();
+      renderDetail();
+      showDetalle();
+    }
+    window.selectClient = selectClient;
+
+    document.getElementById('verClientesBtn').addEventListener('click', () => {
+      applyFilters();
+      showResultados();
+    });
+
+    document.getElementById('backToFiltersBtn').addEventListener('click', showFiltros);
+    document.getElementById('backToResultsBtn').addEventListener('click', showResultados);
+
+    document.getElementById('segmentoFilter').addEventListener('change', () => {
+      updateJefeFilter();
+      updateRutaFilter();
+      applyFilters();
+    });
+
+    document.getElementById('jefeFilter').addEventListener('change', () => {
+      document.getElementById('rutaFilter').value = 'TODOS';
+      updateRutaFilter();
+      applyFilters();
+    });
+
+    document.getElementById('rutaFilter').addEventListener('change', applyFilters);
+    document.getElementById('reloadBtn').addEventListener('click', loadData);
+
+    loadData();
+  </script>
 </body>
 </html>
