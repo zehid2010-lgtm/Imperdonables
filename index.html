@@ -999,7 +999,7 @@ function isAuditableOutnum(outnum){
                 <div class="text-[12px] text-slate-300 mt-2">Outnum ${esc(item.outnum || '-')} · ${esc(item.jefe || '-')}</div>
                 <div class="flex items-center gap-2 mt-2">
                   <div class="text-[11px] text-slate-400">Objetivo: ${formatPct(objetivo)} · Avance: ${formatPct(item.porcentaje)}</div>
-                  ${item.ice !== null && !Number.isNaN(item.ice) ? `<span class="inline-flex items-center justify-center rounded-full px-2 py-1 text-[11px] font-black ${getIceBadgeClass(item.ice)}">ICE ${formatPct(item.ice)}</span>` : ''}
+                  ${item.ice !== null && !Number.isNaN(item.ice) ? `<span class="inline-flex items-center justify-center rounded-full px-2 py-1 text-[11px] font-black ${getIceBadgeClass(item.ice)}">ICE ${formatPct(item.ice)}</span>` : `<span class="inline-flex items-center justify-center rounded-full px-2 py-1 text-[11px] font-black bg-slate-600 text-slate-100">ICE sin dato</span>`}
                 </div>
                 <div class="text-[11px] text-slate-500 mt-1 line-clamp-1">${esc(item.detalle || '-')} · ${esc(item.territorio || '-')}</div>
               </div>
