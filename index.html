@@ -733,16 +733,20 @@ function isAuditableOutnum(outnum){
     }
 
     function buildClientRecords(rows, segmento){
-      if (!rows.length || rows.length < 3) return [];
+      if (!rows.length || rows.length < 4) return [];
 
       const row1 = rows[0] || [];
       const row2 = rows[1] || [];
       const row3 = rows[2] || [];
+      const row4 = rows[3] || [];
 
       const hasThreeHeaderRows = normUpper(row3[0]) === 'DETALLE';
       const metaHeaderRow = hasThreeHeaderRows ? row3 : row2;
-      const displayHeaderTop = row1;
-      const displayHeaderBottom = hasThreeHeaderRows ? row2 : [];
+
+      // Corrección: usar la fila 3 como descripción real de imperdonables
+      const displayHeaderTop = hasThreeHeaderRows ? row3 : row1;
+      const displayHeaderBottom = [];
+
       const dataRows = rows.slice(hasThreeHeaderRows ? 3 : 2);
 
       const detalleIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'DETALLE');
