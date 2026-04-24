@@ -733,31 +733,43 @@ function isAuditableOutnum(outnum){
     }
 
     function buildClientRecords(rows, segmento){
-      if (!rows.length || rows.length < 4) return [];
+      if (!rows.length || rows.length < 2) return [];
 
+      // LECTURA CORREGIDA:
+      // Línea 1 = descripción real de los imperdonables / productos.
+      // Línea 2 = encabezados técnicos: Detalle, Territorio, Cedi, Jefe, Ruta, Out-CL.
+      // Datos = desde la línea siguiente al encabezado técnico.
       const row1 = rows[0] || [];
-      const row2 = rows[1] || [];
-      const row3 = rows[2] || [];
-      const row4 = rows[3] || [];
 
-      const metaHeaderRow = row1;          // usa LINEA 1 como encabezado real
-      const displayHeaderTop = row1;      // descripción / imperdonables desde LINEA 1
-      const displayHeaderBottom = [];
+      let metaHeaderIndex = rows.findIndex((r, idx) =>
+        idx <= 5 && Array.isArray(r) && r.some(v => normUpper(v) === 'OUT-CL')
+      );
 
-      const dataRows = rows.slice(1);     // datos desde LINEA 2
+      if (metaHeaderIndex === -1) {
+        metaHeaderIndex = rows.findIndex((r, idx) =>
+          idx <= 5 && Array.isArray(r) && r.some(v => normUpper(v).includes('OUT'))
+        );
+      }
+
+      if (metaHeaderIndex === -1) return [];
+
+      const metaHeaderRow = rows[metaHeaderIndex] || [];
+      const displayHeaderTop = row1;
+      const displayHeaderBottom = metaHeaderRow;
+      const dataRows = rows.slice(metaHeaderIndex + 1);
 
       const detalleIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'DETALLE');
       const territorioIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'TERRITORIO');
       const cediIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'CEDI');
       const jefeIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'JEFE');
       const rutaIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'RUTA');
-      const outclIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'OUT-CL');
+      const outclIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'OUT-CL' || normUpper(v).includes('OUT'));
 
       if (outclIdx === -1) return [];
 
       const totalIdx = findColumnIndex(displayHeaderTop, displayHeaderBottom, 'Total');
       const dynamicStart = outclIdx + 1;
-      const dynamicEndExclusive = totalIdx > -1 ? totalIdx : metaHeaderRow.length;
+      const dynamicEndExclusive = totalIdx > -1 ? totalIdx : Math.max(displayHeaderTop.length, metaHeaderRow.length);
 
       let lastDetalle = '';
       let lastTerritorio = '';
