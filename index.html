@@ -740,14 +740,11 @@ function isAuditableOutnum(outnum){
       const row3 = rows[2] || [];
       const row4 = rows[3] || [];
 
-      const hasThreeHeaderRows = normUpper(row3[0]) === 'DETALLE';
-      const metaHeaderRow = hasThreeHeaderRows ? row3 : row2;
-
-      // Corrección: usar la fila 3 como descripción real de imperdonables
-      const displayHeaderTop = hasThreeHeaderRows ? row3 : row1;
+      const metaHeaderRow = row1;          // usa LINEA 1 como encabezado real
+      const displayHeaderTop = row1;      // descripción / imperdonables desde LINEA 1
       const displayHeaderBottom = [];
 
-      const dataRows = rows.slice(hasThreeHeaderRows ? 3 : 2);
+      const dataRows = rows.slice(1);     // datos desde LINEA 2
 
       const detalleIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'DETALLE');
       const territorioIdx = metaHeaderRow.findIndex(v => normUpper(v) === 'TERRITORIO');
