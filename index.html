@@ -43,6 +43,7 @@ const CONFIG = {
     { segmento: 'KIOSCO', url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=1866612683&single=true&output=csv' },
     { segmento: 'BRONCE', url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=1006300389&single=true&output=csv' }
   ],
+  auditablesUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=1179124923&single=true&output=csv',
   objetivosSegmento: {
     AUTOSERVICIO: 70.25,
     ORO: 73.52,
@@ -60,7 +61,8 @@ const CONFIG = {
 };
 
 let DATA = [];
-let FILTERS = {segmento:'TODOS', jefe:'TODOS', ruta:'TODOS'};
+let AUDITABLE_SET = new Set(CONFIG.auditableOutnums || []);
+let FILTERS = {segmento:'TODOS', jefe:'TODOS', ruta:'TODOS', auditables:'TODOS'};
 let SELECTED = null;
 
 const $ = (id)=>document.getElementById(id);
@@ -100,6 +102,15 @@ async function fetchCSV(url){
   if(!res.ok) throw new Error('No se pudo leer CSV');
   return parseCSV(await res.text());
 }
+
+async function loadAuditablesCSV(){
+  if(!CONFIG.auditablesUrl) return new Set(CONFIG.auditableOutnums || []);
+  const rows = await fetchCSV(CONFIG.auditablesUrl);
+  const codes = rows
+    .map(r => norm(r[0]).replace(/\D/g,''))
+    .filter(code => /^\d{6,}$/.test(code));
+  return new Set(codes);
+}
 function isBiBooleanValue(v){return ['0','0.0','1','1.0','SI','NO','OK','CUMPLIDO'].includes(upper(v));}
 function isDoneValue(v){return ['1','1.0','SI','OK','CUMPLIDO'].includes(upper(v));}
 function findColumnIndex(a,b,target){const t=upper(target); for(let i=0;i<Math.max(a.length,b.length);i++){if(upper(a[i])===t||upper(b[i])===t)return i;} return -1;}
@@ -116,7 +127,7 @@ function buildClientRecords(rows, segmento){
   if(outclIdx===-1) return [];
   const totalIdx=findColumnIndex(row1,meta,'Total'), dynamicStart=outclIdx+1, dynamicEnd= totalIdx>-1 ? totalIdx : Math.max(row1.length,meta.length);
   let lastDetalle='', lastTerritorio='', lastCedi='', lastJefe='', lastRuta='';
-  const audSet=new Set(CONFIG.auditableOutnums), clients=[];
+  const audSet=AUDITABLE_SET, clients=[];
   for(const row of dataRows){
     const outcl=norm(row[outclIdx]); if(!outcl) continue;
     lastDetalle=(detalleIdx>-1?norm(row[detalleIdx]):'')||lastDetalle;
@@ -133,12 +144,25 @@ function buildClientRecords(rows, segmento){
   return clients;
 }
 async function loadAllData(){
+  try{
+    const auditablesDesdeSheet = await loadAuditablesCSV();
+    if(auditablesDesdeSheet.size > 0) AUDITABLE_SET = auditablesDesdeSheet;
+  }catch(e){
+    console.error('AUDITABLES', e);
+    AUDITABLE_SET = new Set(CONFIG.auditableOutnums || []);
+    showError('No se pudo leer AUDITABLES. Se usa respaldo interno.');
+  }
   const results = await Promise.all(CONFIG.sheets.map(async sh=>{try{return buildClientRecords(await fetchCSV(sh.url), sh.segmento);}catch(e){console.error(sh.segmento,e);return [];}}));
   DATA=results.flat();
 }
 
-function filteredData(){return DATA.filter(d=>(FILTERS.segmento==='TODOS'||d.segmento===FILTERS.segmento)&&(FILTERS.jefe==='TODOS'||d.jefe===FILTERS.jefe)&&(FILTERS.ruta==='TODOS'||d.ruta===FILTERS.ruta));}
-function stats(){const f=filteredData(); const tc=f.length, ok=f.reduce((s,d)=>s+d.cumplidos,0), tot=f.reduce((s,d)=>s+d.totalImperdonables,0); return {totalClientes:tc,totalCumplidos:ok,avance:pct(ok,tot),objetivo:FILTERS.segmento==='TODOS'?null:CONFIG.objetivosSegmento[FILTERS.segmento]};}
+function filteredData(){return DATA.filter(d=>
+  (FILTERS.segmento==='TODOS'||d.segmento===FILTERS.segmento) &&
+  (FILTERS.jefe==='TODOS'||d.jefe===FILTERS.jefe) &&
+  (FILTERS.ruta==='TODOS'||d.ruta===FILTERS.ruta) &&
+  (FILTERS.auditables==='TODOS'||d.auditable)
+);}
+function stats(){const f=filteredData(); const tc=f.length, ok=f.reduce((s,d)=>s+d.cumplidos,0), tot=f.reduce((s,d)=>s+d.totalImperdonables,0); return {totalClientes:tc,totalCumplidos:ok,totalAuditables:f.filter(d=>d.auditable).length,avance:pct(ok,tot),objetivo:FILTERS.segmento==='TODOS'?null:CONFIG.objetivosSegmento[FILTERS.segmento]};}
 
 function renderFilters(isLoading=false){
   showView('viewFilters');
@@ -146,6 +170,7 @@ function renderFilters(isLoading=false){
   const segs=['TODOS',...uniq(DATA.map(d=>d.segmento)).sort()];
   const jefes=['TODOS',...uniq(DATA.filter(d=>FILTERS.segmento==='TODOS'||d.segmento===FILTERS.segmento).map(d=>d.jefe)).sort()];
   const rutas=['TODOS',...uniq(DATA.filter(d=>(FILTERS.segmento==='TODOS'||d.segmento===FILTERS.segmento)&&(FILTERS.jefe==='TODOS'||d.jefe===FILTERS.jefe)).map(d=>d.ruta)).sort((a,b)=>String(a).localeCompare(String(b),'es',{numeric:true}))];
+  const auditablesOpts=[{v:'TODOS',t:'Todos los clientes'},{v:'AUDITABLES',t:'Solo auditables'}];
   let avClass=''; if(FILTERS.segmento!=='TODOS'&&s.objetivo) avClass=clsByObj(FILTERS.segmento,s.avance);
   $('viewFilters').innerHTML=`
     <div class="card">
@@ -154,7 +179,7 @@ function renderFilters(isLoading=false){
         <div class="kpi ${FILTERS.segmento!=='TODOS'?'obj':''}"><div class="label">Objetivo</div><div class="value">${s.objetivo?formatPct(s.objetivo):'NA'}</div></div>
         <div class="kpi ${avClass}"><div class="label">Avance</div><div class="value">${formatPct(s.avance)}</div></div>
         <div class="kpi"><div class="label">Clientes</div><div class="value">${s.totalClientes}</div></div>
-        <div class="kpi"><div class="label">Cumplidos</div><div class="value">${s.totalCumplidos}</div></div>
+        <div class="kpi"><div class="label">Auditables</div><div class="value">${s.totalAuditables}</div></div>
       </div>
     </div>
     <div class="card" style="margin-top:12px">
@@ -162,12 +187,14 @@ function renderFilters(isLoading=false){
       <label>1. Segmento</label><select id="seg">${segs.map(x=>`<option value="${esc(x)}" ${x===FILTERS.segmento?'selected':''}>${x==='TODOS'?'Todos los segmentos':esc(x)}</option>`).join('')}</select>
       <label>2. Jefe</label><select id="jefe">${jefes.map(x=>`<option value="${esc(x)}" ${x===FILTERS.jefe?'selected':''}>${x==='TODOS'?'Todos los jefes':esc(x)}</option>`).join('')}</select>
       <label>3. Ruta</label><select id="ruta">${rutas.map(x=>`<option value="${esc(x)}" ${x===FILTERS.ruta?'selected':''}>${x==='TODOS'?'Todas las rutas':esc(x)}</option>`).join('')}</select>
+      <label>4. Auditables</label><select id="auditables">${auditablesOpts.map(x=>`<option value="${x.v}" ${x.v===FILTERS.auditables?'selected':''}>${x.t}</option>`).join('')}</select>
       <div class="actions"><button id="go" ${isLoading||s.totalClientes===0?'disabled':''}>${isLoading?'Cargando...':'Ver clientes'}</button><button id="reload" class="secondary" ${isLoading?'disabled':''}>Recargar Data</button></div>
     </div>
     <div class="card help" style="margin-top:12px"><div><b>Filtra para comenzar</b><br><br>Selecciona segmento, jefe y ruta para revisar clientes e imperdonables.</div></div>`;
-  $('seg').onchange=e=>{FILTERS={segmento:e.target.value,jefe:'TODOS',ruta:'TODOS'};renderFilters();};
+  $('seg').onchange=e=>{FILTERS={...FILTERS,segmento:e.target.value,jefe:'TODOS',ruta:'TODOS'};renderFilters();};
   $('jefe').onchange=e=>{FILTERS={...FILTERS,jefe:e.target.value,ruta:'TODOS'};renderFilters();};
   $('ruta').onchange=e=>{FILTERS={...FILTERS,ruta:e.target.value};renderFilters();};
+  $('auditables').onchange=e=>{FILTERS={...FILTERS,auditables:e.target.value};renderFilters();};
   $('go').onclick=renderResults;
   $('reload').onclick=init;
 }
