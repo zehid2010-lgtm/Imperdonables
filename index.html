@@ -1,284 +1,8 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Imperdonables Mobile Pro</title>
-<style>
-:root{--bg:#020617;--card:#0f172acc;--line:#1e293b;--txt:#f8fafc;--muted:#94a3b8;--blue:#6366f1;--ok:#10b981;--warn:#f59e0b;--bad:#f43f5e;}
-*{box-sizing:border-box} html,body{margin:0;height:100%;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#020617,#0f172a);color:var(--txt);overflow:hidden}
-button,select,input{font-family:inherit} .app{max-width:560px;margin:0 auto;height:100%;display:flex;flex-direction:column;padding:10px;gap:10px}
-.card{background:rgba(15,23,42,.72);border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:0 20px 50px #0005}
-.header{display:flex;align-items:center;gap:12px;margin-bottom:16px} .logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#4f46e5,#0ea5e9);display:flex;align-items:center;justify-content:center;font-weight:900}
-.kicker{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#64748b;font-weight:900} h1,h2,h3{margin:0} h1{font-size:22px} .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.kpi{background:rgba(2,6,23,.45);border:1px solid var(--line);border-radius:16px;padding:14px} .kpi .label{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.12em;font-weight:900} .kpi .value{font-size:22px;font-weight:900;margin-top:6px}
-.kpi.obj{background:#4f46e51a;border-color:#6366f155} .kpi.ok{background:#10b98122;border-color:#10b98199;color:#d1fae5} .kpi.warn{background:#f59e0b22;border-color:#f59e0b99;color:#fef3c7} .kpi.bad{background:#f43f5e22;border-color:#f43f5e99;color:#ffe4e6}
-.section-title{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#64748b;font-weight:900;margin-bottom:14px}
-label{font-size:10px;font-weight:900;color:#818cf8;text-transform:uppercase;letter-spacing:.16em;margin:12px 0 8px;display:block}
-select,input{width:100%;height:46px;background:rgba(30,41,59,.65);border:1px solid #334155;border-radius:14px;color:#fff;padding:0 12px;font-size:14px;outline:none}
-select:focus,input:focus{border-color:#6366f1;box-shadow:0 0 0 3px #6366f133}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px} button{height:46px;border:0;border-radius:14px;font-weight:900;color:#fff;background:linear-gradient(135deg,#4f46e5,#2563eb);cursor:pointer} button.secondary{background:#1e293b} button.back{width:auto;padding:0 16px;background:#1e293b} button:disabled{opacity:.5;cursor:not-allowed}
-.help{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;color:#64748b;min-height:0} .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;background:rgba(15,23,42,.86);border:1px solid var(--line);border-radius:18px;margin-bottom:10px}
-.scroll{overflow:auto;min-height:0;flex:1;padding-bottom:10px} .row{background:rgba(15,23,42,.70);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:10px;cursor:pointer}
-.row:hover{border-color:#6366f1} .client-title{font-size:15px;font-weight:900;line-height:1.25} .meta{font-size:11px;color:#94a3b8;margin-top:5px} .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px} .tag{font-size:10px;font-weight:900;padding:5px 8px;border-radius:999px;background:#1e293b;color:#cbd5e1} .tag.ok{background:#10b981;color:#052e16} .tag.warn{background:#f59e0b;color:#1c1917} .tag.bad{background:#f43f5e;color:white} .tag.audit{background:#f59e0b22;color:#fbbf24;border:1px solid #f59e0b55}
-.bar{height:7px;background:#1e293b;border-radius:999px;overflow:hidden;margin-top:12px} .bar>div{height:100%;border-radius:999px} .bg-ok{background:var(--ok)} .bg-warn{background:var(--warn)} .bg-bad{background:var(--bad)}
-.detail-main{position:relative} .audit-corner{position:absolute;right:18px;top:18px} .big{font-size:24px;font-weight:900;margin-top:6px;line-height:1.15} .split{display:flex;justify-content:space-between;gap:12px;background:#02061780;border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:14px} .smalllabel{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:.12em;font-weight:900} .bigvalue{font-size:20px;font-weight:900;margin-top:5px}
-.info{font-size:12px;color:#cbd5e1;background:#1e293b55;border:1px solid #334155;border-radius:16px;padding:12px;margin-top:12px;line-height:1.55} .triple{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;background:#02061780;border:1px solid var(--line);border-radius:16px;margin-top:16px;overflow:hidden} .triple>div{padding:14px;text-align:center;border-left:1px solid var(--line)} .triple>div:first-child{border-left:0}
-.imp{display:flex;align-items:center;gap:12px;border-radius:16px;border:1px solid;padding:14px;margin-bottom:10px} .imp.ok{background:#10b98110;border-color:#10b98155} .imp.no{background:#f43f5e10;border-color:#f43f5e55} .dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto} .hidden{display:none!important} .error{position:fixed;left:10px;right:10px;top:10px;z-index:99;background:#f43f5e;color:white;border-radius:16px;padding:14px;font-weight:900;box-shadow:0 20px 60px #0009} .muted{color:#64748b} .search{margin:0 0 10px}
-</style>
-</head>
-<body>
-<div id="error" class="error hidden"></div>
-<main class="app">
-  <section id="viewFilters" class="scroll"></section>
-  <section id="viewResults" class="hidden" style="height:100%;display:flex;flex-direction:column"></section>
-  <section id="viewDetail" class="hidden" style="height:100%;display:flex;flex-direction:column"></section>
-</main>
-<script>
-const CONFIG = {
-  sheets: [
-    { segmento: 'AUTOSERVICIO', url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=1897406888&single=true&output=csv' },
-    { segmento: 'ORO', url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=1674759979&single=true&output=csv' },
-    { segmento: 'PLATA', url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=2007565552&single=true&output=csv' },
-    { segmento: 'KIOSCO', url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=1866612683&single=true&output=csv' },
-    { segmento: 'BRONCE', url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=1006300389&single=true&output=csv' }
-  ],
-  auditablesUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=1179124923&single=true&output=csv',
-  iceUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=125032811&single=true&output=csv',
-  objetivosSegmento: {
-    AUTOSERVICIO: 70.25,
-    ORO: 73.52,
-    PLATA: 71.55,
-    BRONCE: 43.90,
-    KIOSCO: 36.90
-  },
-  iceByOutnum: {
-    "3101670": 71.5, "3134233": 59.5, "3137396": 45.0, "3139791": 52.7, "3139792": 41.8, "3146085": 57.4, "3152442": 49.2, "3173694": 52.7, "3173735": 42.8, "3175089": 57.3, "3185766": 69.0, "3196407": 71.5, "3136847": 63.7, "3137089": 39.8, "3139855": 55.7, "3178400": 53.3, "3187984": 32.0, "3125038": 95.8, "3125044": 97.4, "3125046": 77.2, "3125074": 89.2, "3125091": 90.2, "3125131": 88.0, "3125132": 89.9, "3139636": 65.7, "3196442": 50.7, "3197581": 53.7, "3141908": 37.7, "3142903": 56.0, "3198790": 71.8, "3134428": 67.7, "3136132": 37.3, "3138565": 40.9, "3176407": 63.7, "3179790": 40.7, "3197966": 52.0, "3133862": 56.7, "3135114": 60.3, "3135458": 57.7, "3136536": 51.0, "3137363": 60.7, "3137432": 55.2, "3138409": 33.8, "3153473": 55.0, "3191903": 42.0, "3197246": 44.3, "3139548": 39.5, "3172362": 63.7, "3174533": 63.7, "3192235": 60.7, "3101774": 24.5, "3111204": 50.4, "3134152": 73.4, "3134342": 42.7, "3134352": 64.8, "3136117": 48.8, "3136794": 58.0, "3137244": 37.0, "3139437": 47.0, "3177423": 61.5, "3177652": 81.5, "3178169": 71.5, "3185704": 53.7, "3185782": 47.3, "3185936": 79.0, "3193181": 69.5, "3194493": 49.5, "3195038": 59.0, "3196473": 37.0, "3196475": 44.2, "3199136": 42.0, "3199792": 34.7, "3199802": 69.5, "3199972": 81.5, "3133811": 51.5, "3135159": 38.0, "3135747": 57.0, "3136322": 64.7, "3137141": 55.2, "3137466": 79.0, "3178317": 16.8, "3196655": 39.5, "3136975": 66.8, "3134527": 65.1, "3135845": 69.5, "3135951": 39.5, "3136763": 37.3, "3139551": 50.3, "3187813": 81.5, "3195707": 81.5, "3199669": 81.5, "3134183": 15.0, "3134451": 68.9, "3135309": 66.3, "3135889": 57.3, "3137431": 57.3, "3139988": 59.5, "3148251": 49.7, "3187289": 57.3, "3190590": 57.0, "3198533": 37.0, "3102790": 52.0, "3136334": 37.3, "3137038": 51.6, "3197198": 38.6, "3100979": 77.8, "3110107": 48.3, "3135102": 37.7, "3135245": 72.0, "3135363": 34.5, "3136052": 37.3, "3136168": 69.0, "3139893": 27.2, "3172442": 61.8, "3177425": 81.5, "3177426": 39.5, "3186806": 43.7, "3191621": 34.5, "3191929": 60.0, "3194331": 56.5, "3194596": 19.5, "3196513": 76.1, "3198736": 47.7, "3101626": 72.1, "3136038": 63.1, "3136145": 59.1, "3171130": 55.5, "3178835": 58.7, "3195005": 63.3, "3195093": 59.0, "3198941": 57.1, "3134312": 87.0, "3135516": 46.3, "3135938": 36.8, "3136011": 37.0, "3136056": 63.4, "3136062": 52.0, "3136344": 25.1, "3136920": 71.4, "3137159": 60.0, "3137354": 44.3, "3137403": 63.5, "3139681": 34.4, "3139753": 67.0, "3139947": 45.3, "3140038": 63.6, "3151476": 64.8, "3172236": 52.8, "3172334": 37.7, "3178446": 68.4, "3186682": 45.9, "3187033": 77.9, "3187901": 79.0, "3192009": 81.5, "3193400": 57.4, "3193565": 75.7, "3194531": 69.4, "3194633": 56.2, "3195553": 61.3, "3195888": 55.6, "3196228": 60.9, "3198447": 67.9, "3199017": 39.5, "3199635": 39.5, "3134214": 57.9, "3134394": 35.8, "3193244": 77.9, "3101426": 71.1, "3118791": 49.5, "3135732": 34.5, "3136765": 38.3, "3137513": 49.8, "3137580": 62.3, "3139428": 49.0, "3139442": 66.9, "3177079": 51.0, "3191599": 71.5, "3194378": 49.5, "3194521": 54.1, "3195816": 75.8
-  },
-  auditableOutnums: [
-    '3137513', '3134214', '3133982', '3135071', '3195518', '3138858', '3134150', '3139648', '3136029', '3101626', '3195677', '3199152', '3101876', '3139416', '3139425', '3137186', '3135937', '3135303', '3294950', '3137612', '3134640', '3139502', '3137151', '3193983', '3170993', '3197198', '3135448', '3192202', '3136174', '3294390', '3135526', '3136325', '3137156', '3286496', '3134309', '3193920', '3137469', '3136765', '3137131', '3177079', '3134468', '3134245', '3171130', '3133715', '3136307', '3101426', '3295420', '3101417', '3101618', '3136455', '3133901', '3110220', '3134113', '3138565', '3136966', '3135947', '3136056', '3287320', '3177033', '3198499', '3151425', '3194551', '3197575', '3137134', '3135283', '3135460', '3287794', '3139849', '3134815', '3187901', '3139893', '3137387', '3101776', '3170688', '3193570', '3133853', '3139225', '3286497', '3174500', '3191066', '3196228', '3282040', '3137565', '3177426', '3135102', '3284424', '3194292', '3187093', '3282945', '3135346', '3135339', '3196265', '3196131', '3135433', '3283792', '3110211', '3175162', '3100979', '3135879', '3187880', '3283769', '3136308', '3139442', '3176945', '3199686', '3135478', '3186682', '3110107', '3198811', '3191950', '3194246', '3140584', '3135959', '3194663', '3136151', '3194378', '3139521', '3136011', '3287266', '3195198', '3195148', '3110093', '3139428', '3139678', '3185889', '3137159', '3199752', '3199830', '3135377', '3295401', '3172442', '3199879', '3186230', '3196419', '3140469', '3293889', '3133717', '3133735', '3134307', '3158506', '3195005', '3191138', '3282936', '3136062', '3284567', '3195945', '3187033', '3108908', '3135190', '3195765', '3194596', '3135452', '3135204', '3195888', '3195082', '3199017', '3185804', '3185857', '3195896', '3171309', '3195257', '3134486', '3286656', '3137772', '3196364', '3135732', '3198447', '3184563', '3135816', '3105375', '3137580', '3140021', '3137038', '3139827', '3295280', '3194461', '3139855', '3148251', '3134285', '3155381', '3139969', '3286023', '3196397', '3139586', '3139682', '3133807', '3172334', '3283794', '3101482', '3146922', '3134589', '3136168', '3194521', '3191929', '3148580', '3195553', '3184863', '3283805', '3135245', '3136373', '3141157', '3282909', '3135826', '3290700', '3195816', '3198663', '3134520', '3295321', '3136270', '3133809', '3193789', '3135088', '3197590', '3136052', '3287260', '3284665', '3198492', '3193244', '3282947', '3184492', '3177454', '3135889', '3286635', '3139519', '3137560', '3195830', '3193928', '3177424', '3137500', '3100944', '3283806', '3286436', '3101452', '3199635', '3135121', '3101756', '3196513', '3191621', '3134209', '3194949', '3135246', '3138906', '3191290', '3134386', '3134742', '3139388', '3195857', '3178592', '3100946', '3137019', '3101445', '3108333', '3185766', '3185880', '3286277', '3196252', '3136899', '3140848', '3136438', '3135870', '3284459', '3136160', '3135927', '3135819', '3148364', '3115685', '3195116', '3195754', '3287345', '3146509', '3177425', '3282919', '3170099', '3174139', '3135534', '3153768', '3194833', '3194575', '3149882', '3284190', '3290012', '3135938', '3100959', '3283589', '3135090', '3135491', '3191487', '3287221', '3137712', '3135263', '3137330', '3170565', '3293179', '3287166', '3135626', '3194633', '3295467', '3110180', '3137157', '3135281', '3135991', '3292758', '3196014', '3199972', '3135719', '3191599', '3197374', '3170125', '3174306', '3133913', '3199669', '3134625', '3192009', '3177365', '3137115', '3136356', '3134428', '3101203', '3139989', '3196098', '3139735', '3284679', '3136345', '3199802', '3195263', '3287827', '3198723', '3137220', '3199136', '3153264', '3199891', '3134370', '3199854', '3185936', '3199817', '3198759', '3136792', '3110213', '3286823', '3290259', '3100993', '3191777', '3199734', '3194531', '3196472', '3178169', '3139865', '3137460', '3195170', '3193181', '3117736', '3177423', '3175157', '3196655', '3137058', '3136779', '3139438', '3139774', '3139791', '3185216', '3199835', '3198762', '3198676', '3186869', '3135912', '3134513', '3292824', '3135845', '3283803', '3144052', '3196407', '3134312', '3191432', '3135963', '3195093', '3139926', '3134718', '3137290', '3196473', '3185143', '3197966', '3287182', '3134572', '3135453', '3195596', '3101161', '3138432', '3135487', '3118791', '3195877', '3286677', '3171270', '3197599', '3140555', '3140038', '3193282', '3177652', '3139437', '3135458', '3176257', '3153596', '3136048', '3137747', '3140495', '3177553', '3191305', '3193565', '3137132', '3193727', '3134191', '3137435', '3137598', '3135847', '3196443', '3178400', '3170010', '3174545', '3136044', '3198586', '3283156', '3194331', '3139696', '3137140', '3148433', '3198906', '3194079', '3287842', '3133693', '3197583', '3101670', '3140486', '3101737', '3196525', '3173971', '3101846', '3101210', '3191982', '3134246', '3136920', '3136231', '3195741', '3171658', '3142693', '3186695', '3106978', '3199443', '3143734', '3198736', '3286246', '3284643', '3136909', '3158350', '3136145', '3194493', '3145893', '3179145', '3136159', '3135874', '3101312', '3139951', '3178256', '3292976', '3137318', '3195008', '3196177', '3199293', '3139713', '3134591', '3195038', '3138501', '3155022', '3171831', '3198533', '3198563', '3136794', '3139681', '3136334', '3291684', '3286808', '3137089', '3135747', '3151476', '3136322', '3192298', '3145469', '3174459', '3186806', '3294725', '3170431', '3187813', '3190590', '3137076', '3137466', '3137954', '3159832', '3295190', '3134372', '3134106', '3194710', '3136878', '3139708', '3196624', '3135256', '3178835', '3136860', '3178446', '3135958', '3146070', '3134152', '3136117', '3134060', '3195705', '3136266', '3134667', '3134173', '3136873', '3137123', '3284563', '3284677', '3139587', '3198976', '3134594', '3192465', '3139135', '3198604', '3194008', '3135437', '3137286', '3139501', '3193628', '3139476', '3185683', '3294172', '3190844', '3136074', '3133958', '3283055', '3178323', '3178317', '3144961', '3179541', '3135516', '3136703', '3137354', '3139947', '3185808', '3134394', '3294666', '3190865', '3134219', '3137033', '3177258', '3134527', '3293452', '3196036', '3134754', '3134709', '3136038', '3199397', '3139548', '3135376', '3187289', '3134649', '3137810', '3197581', '3179790', '3191849', '3198791', '3139590', '3136963', '3198893', '3197595', '3185546', '3172236', '3136960', '3137996', '3133995', '3135774', '3154441', '3134661', '3286484', '3195961', '3137396', '3137476', '3198785', '3195576', '3137431', '3134262', '3154446', '3170675', '3101617', '3193400', '3136018', '3292562', '3136158', '3282921', '3115991', '3139753', '3139636', '3141908', '3135309', '3199683', '3138150', '3137363', '3196240', '3101680', '3101667', '3198037', '3287839', '3283753', '3295278', '3198521', '3138615', '3134352', '3185901', '3135242', '3142720', '3133884', '3196214', '3199296', '3173786', '3286818', '3184499', '3156851', '3150712', '3187984', '3198588', '3101368', '3133882', '3198910', '3137403', '3173735', '3136847', '3137306', '3115009', '3173694', '3190692', '3295480', '3101480', '3177002', '3185815', '3135864', '3145569', '3185704', '3141237', '3134233', '3140852', '3135067', '3101878', '3139836', '3136975', '3197297', '3134730', '3137097', '3139792', '3191511', '3138293', '3139873', '3283810', '3135731', '3185721', '3135984', '3134143', '3142903', '3134413', '3136447', '3287181', '3135384', '3136955', '3179274', '3134329', '3135866', '3135328', '3286793', '3191719', '3194449', '3283635', '3283487', '3134768', '3139624', '3178579', '3284654', '3100996', '3149396', '3101520', '3284635', '3135225', '3134451', '3282780', '3134229', '3174533', '3175976', '3194831', '3135530', '3142835', '3198941', '3176407', '3110055', '3135232', '3148564', '3287805', '3135080', '3175089', '3199324', '3133873', '3101306', '3134333', '3135567', '3198398', '3137141', '3134707', '3135159', '3199566', '3146085', '3135925', '3133678', '3290402', '3134556', '3195391', '3137125', '3135978', '3191271', '3196307', '3282228', '3282415', '3283393', '3134412', '3134278', '3134456', '3134837', '3286820', '3102790', '3185313', '3137320', '3174919', '3134618', '3194683', '3172254', '3173861', '3199792', '3282754', '3171736', '3134183', '3185334', '3195707', '3136267', '3286458', '3191960', '3175373', '3135955', '3136331', '3139988', '3135951', '3139903', '3153473', '3284440', '3139551', '3135114', '3134216', '3101774', '3192235', '3198790', '3292587', '3199973', '3159524', '3139657', '3142823', '3191523', '3139460', '3287789', '3137062', '3138918', '3190828', '3198864', '3287247', '3292552', '3293120', '3145900', '3199746', '3137471', '3194874', '3151869', '3195252', '3134789', '3136393', '3111204', '3135171', '3136344', '3283643', '3284616', '3136952', '3185121', '3193734', '3199858', '3100942', '3136175', '3136849', '3135327', '3135993', '3152442', '3134084', '3184608', '3139581', '3170812', '3100923', '3137194', '3139767', '3136132', '3136365', '3101555', '3158487', '3176189', '3101248', '3139635', '3185782', '3196799', '3284619', '3282544', '3101663', '3196475', '3134387', '3191903', '3196401', '3198804', '3147615', '3134153', '3172362', '3134510', '3136341', '3137264', '3185797', '3282230', '3135123', '3137244', '3193893', '3135632', '3101418', '3110187', '3138409', '3191636', '3134218', '3134397', '3134435', '3176106', '3198574', '3186174', '3133656', '3136058', '3137238', '3137312', '3185773', '3193912', '3134414', '3134008', '3196301', '3186965', '3153810', '3190815', '3199297', '3135363', '3137432', '3135093', '3177389', '3137410', '3135708', '3192211', '3198557', '3194827', '3136323', '3136858', '3101821', '3134047', '3138454', '3136752', '3135469', '3139991', '3196078', '3133670', '3134494', '3136536', '3170864', '3192133', '3135895', '3136189', '3137367', '3136763', '3139417', '3286509', '3286771', '3135215', '3139305', '3198957', '3133862', '3191392', '3137498', '3101324', '3135599', '3193990', '3136688', '3138431', '3174550', '3187980', '3135520', '3139175', '3177479', '3193047', '3196442', '3196674', '3135678', '3135770', '3148280', '3284142', '3134072', '3139558', '3134342', '3177016', '3194254', '3133811', '3133902', '3139686', '3139483', '3139699', '3195369', '3197246', '3284176', '3134793', '3136165', '3136403', '3145798'
-  ],
-  headerAliases: {}
-};
-
-let DATA = [];
-let AUDITABLE_SET = new Set(CONFIG.auditableOutnums || []);
-let ICE_MAP = {...(CONFIG.iceByOutnum || {})};
-let FILTERS = {segmento:'TODOS', jefe:'TODOS', ruta:'TODOS', auditables:'TODOS'};
-let SELECTED = null;
-
-const $ = (id)=>document.getElementById(id);
-function esc(v){return String(v ?? '').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
-function norm(v){return String(v ?? '').trim();}
-function upper(v){return norm(v).toUpperCase();}
-function pct(n,d){return !d||d<=0?0:(n/d)*100;}
-function formatPct(v){let n=Number(v); if(Number.isNaN(n)) return '0,0%'; return n.toFixed(1).replace('.', ',')+'%';}
-function uniq(arr){return [...new Set(arr.filter(x=>norm(x)))];}
-function clsByObj(segmento, porcentaje){const obj=CONFIG.objetivosSegmento[segmento]||0; const diff=obj-porcentaje; if(porcentaje>=obj)return 'ok'; if(diff<=5)return 'warn'; return 'bad';}
-function barByObj(segmento, porcentaje){return 'bg-'+clsByObj(segmento, porcentaje);}
-function iceClass(ice){if(ice===null||Number.isNaN(ice))return ''; if(ice>=80)return 'ok'; if(ice>=60)return 'warn'; return 'bad';}
-function showError(msg){const e=$('error'); e.textContent=msg; e.classList.remove('hidden'); setTimeout(()=>e.classList.add('hidden'),5000);}
-
-function parseCSV(text){
-  text = text.replace(/^\uFEFF/, '');
-  const rows=[]; let row=[]; let cur=''; let q=false;
-  for(let i=0;i<text.length;i++){
-    const c=text[i], n=text[i+1];
-    if(q){
-      if(c==='"' && n==='"'){cur+='"'; i++;}
-      else if(c==='"') q=false;
-      else cur+=c;
-    } else {
-      if(c==='"') q=true;
-      else if(c===','){row.push(cur); cur='';}
-      else if(c==='\n'){row.push(cur); if(row.some(x=>norm(x) !== '')) rows.push(row); row=[]; cur='';}
-      else if(c==='\r'){}
-      else cur+=c;
-    }
-  }
-  row.push(cur); if(row.some(x=>norm(x) !== '')) rows.push(row);
-  return rows;
-}
-async function fetchCSV(url){
-  const res=await fetch(url + (url.includes('?')?'&':'?') + '_ts=' + Date.now(), {cache:'no-store'});
-  if(!res.ok) throw new Error('No se pudo leer CSV');
-  return parseCSV(await res.text());
-}
-
-async function loadAuditablesCSV(){
-  if(!CONFIG.auditablesUrl) return new Set(CONFIG.auditableOutnums || []);
-  const rows = await fetchCSV(CONFIG.auditablesUrl);
-  const codes = rows
-    .map(r => norm(r[0]).replace(/\D/g,''))
-    .filter(code => /^\d{6,}$/.test(code));
-  return new Set(codes);
-}
-
-function parseIceNumber(v){
-  let s = norm(v).replace('%','').replace(/\./g,'').replace(',', '.');
-  const n = Number(s);
-  return Number.isNaN(n) ? null : n;
-}
-async function loadIceCSV(){
-  const map = {...(CONFIG.iceByOutnum || {})};
-  if(!CONFIG.iceUrl) return map;
-  const rows = await fetchCSV(CONFIG.iceUrl);
-  if(!rows.length) return map;
-
-  let headerIndex = rows.findIndex((r,idx)=>idx<=8 && r.some(v=>upper(v)==='OUT-CL' || upper(v).includes('OUT')) && r.some(v=>upper(v).includes('PUNTAJE') || upper(v).includes('AVANCE') || upper(v).includes('ICE')));
-  if(headerIndex === -1) headerIndex = rows.findIndex((r,idx)=>idx<=8 && r.some(v=>upper(v)==='OUT-CL' || upper(v).includes('OUT')));
-  const header = headerIndex >= 0 ? rows[headerIndex] : [];
-  const dataRows = headerIndex >= 0 ? rows.slice(headerIndex+1) : rows;
-
-  let clienteIdx = header.findIndex(v=>upper(v)==='OUT-CL' || upper(v).includes('OUT'));
-  let avanceIdx = header.findIndex(v=>upper(v).includes('PUNTAJE') || upper(v).includes('AVANCE') || upper(v).includes('ICE'));
-
-  if(clienteIdx === -1) clienteIdx = 4;
-  if(avanceIdx === -1) avanceIdx = 5;
-
-  for(const row of dataRows){
-    const clienteRaw = norm(row[clienteIdx]);
-    const avanceRaw = norm(row[avanceIdx]);
-    if(!clienteRaw || !avanceRaw) continue;
-    if(upper(clienteRaw).includes('TOTAL')) continue;
-
-    const outnum = clienteRaw.split(' - ')[0].replace(/\D/g,'');
-    if(!/^\d{6,}$/.test(outnum)) continue;
-
-    const avance = parseIceNumber(avanceRaw);
-    if(avance === null) continue;
-    map[outnum] = avance;
-  }
-  return map;
-}
-function isBiBooleanValue(v){return ['0','0.0','1','1.0','SI','NO','OK','CUMPLIDO'].includes(upper(v));}
-function isDoneValue(v){return ['1','1.0','SI','OK','CUMPLIDO'].includes(upper(v));}
-function findColumnIndex(a,b,target){const t=upper(target); for(let i=0;i<Math.max(a.length,b.length);i++){if(upper(a[i])===t||upper(b[i])===t)return i;} return -1;}
-function getImpName(top,bottom,i){return [norm(top[i]||''), norm(bottom[i]||'')].filter(Boolean).join(' ').trim() || 'Imperdonable '+(i+1);}
-
-function buildClientRecords(rows, segmento){
-  if(!rows.length || rows.length<2) return [];
-  const row1=rows[0]||[];
-  let metaHeaderIndex = rows.findIndex((r,idx)=>idx<=5 && r.some(v=>upper(v)==='OUT-CL'));
-  if(metaHeaderIndex===-1) metaHeaderIndex = rows.findIndex((r,idx)=>idx<=5 && r.some(v=>upper(v).includes('OUT')));
-  if(metaHeaderIndex===-1) return [];
-  const meta=rows[metaHeaderIndex]||[], dataRows=rows.slice(metaHeaderIndex+1);
-  const detalleIdx=meta.findIndex(v=>upper(v)==='DETALLE'), territorioIdx=meta.findIndex(v=>upper(v)==='TERRITORIO'), cediIdx=meta.findIndex(v=>upper(v)==='CEDI'), jefeIdx=meta.findIndex(v=>upper(v)==='JEFE'), rutaIdx=meta.findIndex(v=>upper(v)==='RUTA'), outclIdx=meta.findIndex(v=>upper(v)==='OUT-CL'||upper(v).includes('OUT'));
-  if(outclIdx===-1) return [];
-  const totalIdx=findColumnIndex(row1,meta,'Total'), dynamicStart=outclIdx+1, dynamicEnd= totalIdx>-1 ? totalIdx : Math.max(row1.length,meta.length);
-  let lastDetalle='', lastTerritorio='', lastCedi='', lastJefe='', lastRuta='';
-  const audSet=AUDITABLE_SET, clients=[];
-  for(const row of dataRows){
-    const outcl=norm(row[outclIdx]); if(!outcl) continue;
-    lastDetalle=(detalleIdx>-1?norm(row[detalleIdx]):'')||lastDetalle;
-    lastTerritorio=(territorioIdx>-1?norm(row[territorioIdx]):'')||lastTerritorio;
-    lastCedi=(cediIdx>-1?norm(row[cediIdx]):'')||lastCedi;
-    lastJefe=(jefeIdx>-1?norm(row[jefeIdx]):'')||lastJefe;
-    lastRuta=(rutaIdx>-1?norm(row[rutaIdx]):'')||lastRuta;
-    const parts=outcl.split(' - '), outnum=norm(parts[0]), cliente=norm(parts.slice(1).join(' - '))||outcl;
-    const imperdonables=[]; let cumplidos=0,totalValidos=0;
-    for(let i=dynamicStart;i<dynamicEnd;i++){const rawVal=norm(row[i]); if(!isBiBooleanValue(rawVal)) continue; totalValidos++; const done=isDoneValue(rawVal); if(done) cumplidos++; imperdonables.push({nombre:getImpName(row1,meta,i), cumplido:done, rawVal});}
-    const iceRaw=ICE_MAP[outnum], ice=iceRaw!==undefined&&iceRaw!==null&&iceRaw!==''?Number(iceRaw):null;
-    clients.push({key:`${segmento}|${lastCedi}|${lastRuta}|${outnum}|${cliente}`,segmento,outnum,cliente,ruta:lastRuta,jefe:lastJefe,detalle:lastDetalle,territorio:lastTerritorio,cedi:lastCedi,totalImperdonables:totalValidos,cumplidos,porcentaje:pct(cumplidos,totalValidos),ice,auditable:audSet.has(outnum),imperdonables});
-  }
-  return clients;
-}
-async function loadAllData(){
-  try{
-    const auditablesDesdeSheet = await loadAuditablesCSV();
-    if(auditablesDesdeSheet.size > 0) AUDITABLE_SET = auditablesDesdeSheet;
-  }catch(e){
-    console.error('AUDITABLES', e);
-    AUDITABLE_SET = new Set(CONFIG.auditableOutnums || []);
-    showError('No se pudo leer AUDITABLES. Se usa respaldo interno.');
-  }
-  try{
-    ICE_MAP = await loadIceCSV();
-  }catch(e){
-    console.error('ICE', e);
-    ICE_MAP = {...(CONFIG.iceByOutnum || {})};
-    showError('No se pudo leer ICE. Se usa respaldo interno.');
-  }
-  const results = await Promise.all(CONFIG.sheets.map(async sh=>{try{return buildClientRecords(await fetchCSV(sh.url), sh.segmento);}catch(e){console.error(sh.segmento,e);return [];}}));
-  DATA=results.flat();
-}
-
-function filteredData(){return DATA.filter(d=>
-  (FILTERS.segmento==='TODOS'||d.segmento===FILTERS.segmento) &&
-  (FILTERS.jefe==='TODOS'||d.jefe===FILTERS.jefe) &&
-  (FILTERS.ruta==='TODOS'||d.ruta===FILTERS.ruta) &&
-  (FILTERS.auditables==='TODOS'||d.auditable)
-);}
-function stats(){const f=filteredData(); const tc=f.length, ok=f.reduce((s,d)=>s+d.cumplidos,0), tot=f.reduce((s,d)=>s+d.totalImperdonables,0); return {totalClientes:tc,totalCumplidos:ok,totalAuditables:f.filter(d=>d.auditable).length,avance:pct(ok,tot),objetivo:FILTERS.segmento==='TODOS'?null:CONFIG.objetivosSegmento[FILTERS.segmento]};}
-
-function renderFilters(isLoading=false){
-  showView('viewFilters');
-  const s=stats();
-  const segs=['TODOS',...uniq(DATA.map(d=>d.segmento)).sort()];
-  const jefes=['TODOS',...uniq(DATA.filter(d=>FILTERS.segmento==='TODOS'||d.segmento===FILTERS.segmento).map(d=>d.jefe)).sort()];
-  const rutas=['TODOS',...uniq(DATA.filter(d=>(FILTERS.segmento==='TODOS'||d.segmento===FILTERS.segmento)&&(FILTERS.jefe==='TODOS'||d.jefe===FILTERS.jefe)).map(d=>d.ruta)).sort((a,b)=>String(a).localeCompare(String(b),'es',{numeric:true}))];
-  const auditablesOpts=[{v:'TODOS',t:'Todos los clientes'},{v:'AUDITABLES',t:'Solo auditables'}];
-  let avClass=''; if(FILTERS.segmento!=='TODOS'&&s.objetivo) avClass=clsByObj(FILTERS.segmento,s.avance);
-  $('viewFilters').innerHTML=`
-    <div class="card">
-      <div class="header"><div class="logo">↗</div><div><div class="kicker">Mobile Pro</div><h1>Imperdonables</h1></div></div>
-      <div class="grid2">
-        <div class="kpi ${FILTERS.segmento!=='TODOS'?'obj':''}"><div class="label">Objetivo</div><div class="value">${s.objetivo?formatPct(s.objetivo):'NA'}</div></div>
-        <div class="kpi ${avClass}"><div class="label">Avance</div><div class="value">${formatPct(s.avance)}</div></div>
-        <div class="kpi"><div class="label">Clientes</div><div class="value">${s.totalClientes}</div></div>
-        <div class="kpi"><div class="label">Auditables</div><div class="value">${s.totalAuditables}</div></div>
-      </div>
-    </div>
-    <div class="card" style="margin-top:12px">
-      <div class="section-title">Filtros principales</div>
-      <label>1. Segmento</label><select id="seg">${segs.map(x=>`<option value="${esc(x)}" ${x===FILTERS.segmento?'selected':''}>${x==='TODOS'?'Todos los segmentos':esc(x)}</option>`).join('')}</select>
-      <label>2. Jefe</label><select id="jefe">${jefes.map(x=>`<option value="${esc(x)}" ${x===FILTERS.jefe?'selected':''}>${x==='TODOS'?'Todos los jefes':esc(x)}</option>`).join('')}</select>
-      <label>3. Ruta</label><select id="ruta">${rutas.map(x=>`<option value="${esc(x)}" ${x===FILTERS.ruta?'selected':''}>${x==='TODOS'?'Todas las rutas':esc(x)}</option>`).join('')}</select>
-      <label>4. Auditables</label><select id="auditables">${auditablesOpts.map(x=>`<option value="${x.v}" ${x.v===FILTERS.auditables?'selected':''}>${x.t}</option>`).join('')}</select>
-      <div class="actions"><button id="go" ${isLoading||s.totalClientes===0?'disabled':''}>${isLoading?'Cargando...':'Ver clientes'}</button><button id="reload" class="secondary" ${isLoading?'disabled':''}>Recargar Data</button></div>
-    </div>
-    <div class="card help" style="margin-top:12px"><div><b>Filtra para comenzar</b><br><br>Selecciona segmento, jefe y ruta para revisar clientes e imperdonables.</div></div>`;
-  $('seg').onchange=e=>{FILTERS={...FILTERS,segmento:e.target.value,jefe:'TODOS',ruta:'TODOS'};renderFilters();};
-  $('jefe').onchange=e=>{FILTERS={...FILTERS,jefe:e.target.value,ruta:'TODOS'};renderFilters();};
-  $('ruta').onchange=e=>{FILTERS={...FILTERS,ruta:e.target.value};renderFilters();};
-  $('auditables').onchange=e=>{FILTERS={...FILTERS,auditables:e.target.value};renderFilters();};
-  $('go').onclick=renderResults;
-  $('reload').onclick=init;
-}
-
-function renderResults(){
-  showView('viewResults');
-  let arr=filteredData().sort((a,b)=>String(a.ruta)!==String(b.ruta)?String(a.ruta).localeCompare(String(b.ruta),'es',{numeric:true}):String(a.cliente).localeCompare(String(b.cliente),'es'));
-  const audit=arr.filter(x=>x.auditable).length;
-  $('viewResults').innerHTML=`
-    <div class="topbar"><div><h2>${FILTERS.ruta!=='TODOS'?'Ruta '+esc(FILTERS.ruta):'Clientes filtrados'}</h2><div class="meta">${arr.length} clientes · ${audit} auditables</div></div><button class="back" id="back">Volver</button></div>
-    <input class="search" id="q" placeholder="Buscar por cliente o número...">
-    <div class="scroll" id="list"></div>`;
-  $('back').onclick=()=>renderFilters();
-  $('q').oninput=()=>drawList(arr);
-  drawList(arr);
-}
-function drawList(arr){
-  const q=upper($('q')?.value||'');
-  const list=arr.filter(d=>!q||upper(d.cliente).includes(q)||upper(d.outnum).includes(q));
-  $('list').innerHTML = list.length ? list.map((d,i)=>`<div class="row" data-i="${i}">
-    <div class="client-title">${esc(d.cliente)}</div>
-    <div class="meta">Outnum ${esc(d.outnum)} · ${esc(d.segmento)} · Ruta ${esc(d.ruta||'-')} · Jefe ${esc(d.jefe||'-')}</div>
-    <div class="tags">
-      <span class="tag ${clsByObj(d.segmento,d.porcentaje)}">Avance ${formatPct(d.porcentaje)}</span>
-      <span class="tag">OK ${d.cumplidos}/${d.totalImperdonables}</span>
-      <span class="tag ${iceClass(d.ice)}">ICE ${d.ice===null?'S/D':formatPct(d.ice)}</span>
-      ${d.auditable?'<span class="tag audit">Auditable</span>':''}
-    </div>
-    <div class="bar"><div class="${barByObj(d.segmento,d.porcentaje)}" style="width:${Math.min(d.porcentaje,100)}%"></div></div>
-  </div>`).join('') : `<div class="card help"><b>No hay clientes con esos filtros.</b></div>`;
-  [...$('list').querySelectorAll('.row')].forEach((el,idx)=>el.onclick=()=>{SELECTED=list[idx]; renderDetail();});
-}
-
 function renderDetail(){
   const c=SELECTED; if(!c) return renderResults();
   showView('viewDetail');
   const objetivo=CONFIG.objetivosSegmento[c.segmento]||0, pendientes=Math.max(c.totalImperdonables-c.cumplidos,0);
+
   $('viewDetail').innerHTML=`
     <div class="topbar"><div><h2>Detalle del cliente</h2><div class="meta">Imperdonables y avance</div></div><button class="back" id="back2">Volver</button></div>
     <div class="scroll">
@@ -288,26 +12,86 @@ function renderDetail(){
         <div class="big">${esc(c.cliente||'-')}</div>
         <div class="meta">Outnum ${esc(c.outnum||'-')}</div>
         <div class="meta">Jefe: ${esc(c.jefe||'-')}</div>
-        <div class="split"><div><div class="smalllabel">Avance actual</div><div class="bigvalue">${formatPct(c.porcentaje)}</div></div><div style="text-align:right"><div class="smalllabel">Objetivo segmento</div><div class="bigvalue">${formatPct(objetivo)}</div></div></div>
-        <div class="tags"><span class="tag ${iceClass(c.ice)}">ICE del cliente: ${c.ice===null?'Sin dato':formatPct(c.ice)}</span></div>
-        <div class="info"><b>Detalle:</b> ${esc(c.detalle||'-')}<br><b>Territorio:</b> ${esc(c.territorio||'-')}<br><b>Cedi:</b> ${esc(c.cedi||'-')}</div>
-        <div class="triple"><div><div class="smalllabel">Total</div><div class="bigvalue">${c.totalImperdonables}</div></div><div><div class="smalllabel">OK</div><div class="bigvalue" style="color:#34d399">${c.cumplidos}</div></div><div><div class="smalllabel">Pend.</div><div class="bigvalue" style="color:#fb7185">${pendientes}</div></div></div>
-        <div style="margin-top:16px"><div class="meta"><b>Progreso general</b> <span style="float:right">${c.cumplidos}/${c.totalImperdonables}</span></div><div class="bar"><div class="${barByObj(c.segmento,c.porcentaje)}" style="width:${Math.min(c.porcentaje,100)}%"></div></div></div>
+
+        <div class="split">
+          <div>
+            <div class="smalllabel">Avance actual</div>
+            <div class="bigvalue">${formatPct(c.porcentaje)}</div>
+          </div>
+          <div style="text-align:right">
+            <div class="smalllabel">Objetivo segmento</div>
+            <div class="bigvalue">${formatPct(objetivo)}</div>
+          </div>
+        </div>
+
+        <div class="tags">
+          <span class="tag ${iceClass(c.ice)}">
+            ICE del cliente: ${c.ice===null?'Sin dato':formatPct(c.ice)}
+          </span>
+        </div>
+
+        <div class="info">
+          <b>Detalle:</b> ${esc(c.detalle||'-')}<br>
+          <b>Territorio:</b> ${esc(c.territorio||'-')}<br>
+          <b>Cedi:</b> ${esc(c.cedi||'-')}
+        </div>
+
+        <div class="triple">
+          <div><div class="smalllabel">Total</div><div class="bigvalue">${c.totalImperdonables}</div></div>
+          <div><div class="smalllabel">OK</div><div class="bigvalue" style="color:#34d399">${c.cumplidos}</div></div>
+          <div><div class="smalllabel">Pend.</div><div class="bigvalue" style="color:#fb7185">${pendientes}</div></div>
+        </div>
+
+        <div style="margin-top:16px">
+          <div class="meta"><b>Progreso general</b> <span style="float:right">${c.cumplidos}/${c.totalImperdonables}</span></div>
+          <div class="bar">
+            <div class="${barByObj(c.segmento,c.porcentaje)}" style="width:${Math.min(c.porcentaje,100)}%"></div>
+          </div>
+        </div>
       </div>
-      <div class="card" style="margin-top:12px"><div class="section-title">Imperdonables</div>
-        ${c.imperdonables.length?c.imperdonables.map(imp=>`<div class="imp ${imp.cumplido?'ok':'no'}"><div class="dot" style="background:${imp.cumplido?'#10b981':'#f43f5e'}"></div><div style="flex:1"><b>${esc(imp.nombre)}</b><div class="meta">Valor: ${esc(imp.rawVal||'-')}</div></div><span class="tag ${imp.cumplido?'ok':'bad'}">${imp.cumplido?'Cumplido':'Pendiente'}</span></div>`).join(''):'<div class="muted">Sin imperdonables activos</div>'}
+
+      <div class="card" style="margin-top:12px">
+        <div class="section-title">Imperdonables</div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px">
+          <button onclick="filtrarImp('todos')" style="height:40px">Todos</button>
+          <button onclick="filtrarImp('ok')" style="height:40px;background:#10b981">Cumplidos</button>
+          <button onclick="filtrarImp('no')" style="height:40px;background:#f43f5e">Faltantes</button>
+        </div>
+
+        <div id="listaImperdonables">
+          ${c.imperdonables.length ? c.imperdonables.map(imp=>`
+            <div class="imp ${imp.cumplido?'ok':'no'} itemImp" data-status="${imp.cumplido?'ok':'no'}">
+              <div class="dot" style="background:${imp.cumplido?'#10b981':'#f43f5e'}"></div>
+              <div style="flex:1">
+                <b>${esc(imp.nombre)}</b>
+                <div class="meta">Valor: ${esc(imp.rawVal||'-')}</div>
+              </div>
+              <span class="tag ${imp.cumplido?'ok':'bad'}">
+                ${imp.cumplido?'Cumplido':'Pendiente'}
+              </span>
+            </div>
+          `).join('') : '<div class="muted">Sin imperdonables activos</div>'}
+        </div>
       </div>
-    </div>`;
+    </div>
+  `;
+
   $('back2').onclick=renderResults;
 }
 
-function showView(id){['viewFilters','viewResults','viewDetail'].forEach(x=>$(x).classList.toggle('hidden',x!==id));}
-async function init(){
-  renderFilters(true);
-  try{await loadAllData(); renderFilters(false); if(!DATA.length) showError('No se cargaron datos. Revisá que las hojas estén publicadas como CSV.');}
-  catch(e){console.error(e); showError('Error cargando la aplicación.'); renderFilters(false);}
+function filtrarImp(tipo){
+  const items=document.querySelectorAll('.itemImp');
+
+  items.forEach(el=>{
+    const estado=el.dataset.status;
+
+    if(tipo==='todos'){
+      el.style.display='flex';
+    }else if(estado===tipo){
+      el.style.display='flex';
+    }else{
+      el.style.display='none';
+    }
+  });
 }
-init();
-</script>
-</body>
-</html>
