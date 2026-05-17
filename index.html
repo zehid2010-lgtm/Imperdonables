@@ -119,6 +119,13 @@ function parseIceNumber(v){
   const n = Number(s);
   return Number.isNaN(n) ? null : n;
 }
+function parseResultadoPct(v){
+  let s = norm(v).replace('%','').trim();
+  if(!s) return null;
+  s = s.replace(/\./g,'').replace(',', '.');
+  const n = Number(s);
+  return Number.isNaN(n) ? null : n;
+}
 async function loadIceCSV(){
   const map = {...(CONFIG.iceByOutnum || {})};
   if(!CONFIG.iceUrl) return map;
@@ -165,7 +172,9 @@ function buildClientRecords(rows, segmento){
   const meta=rows[metaHeaderIndex]||[], dataRows=rows.slice(metaHeaderIndex+1);
   const detalleIdx=meta.findIndex(v=>upper(v)==='DETALLE'), territorioIdx=meta.findIndex(v=>upper(v)==='TERRITORIO'), cediIdx=meta.findIndex(v=>upper(v)==='CEDI'), jefeIdx=meta.findIndex(v=>upper(v)==='JEFE'), rutaIdx=meta.findIndex(v=>upper(v)==='RUTA'), outclIdx=meta.findIndex(v=>upper(v)==='OUT-CL'||upper(v).includes('OUT'));
   if(outclIdx===-1) return [];
-  const totalIdx=findColumnIndex(row1,meta,'Total'), dynamicStart=outclIdx+1, dynamicEnd= totalIdx>-1 ? totalIdx : Math.max(row1.length,meta.length);
+  let totalIdx=findColumnIndex(row1,meta,'Total');
+  if(totalIdx===-1) totalIdx=findColumnIndex(row1,meta,'Resultado');
+  const dynamicStart=outclIdx+1, dynamicEnd= totalIdx>-1 ? totalIdx : Math.max(row1.length,meta.length);
   let lastDetalle='', lastTerritorio='', lastCedi='', lastJefe='', lastRuta='';
   const audSet=AUDITABLE_SET, clients=[];
   for(const row of dataRows){
@@ -179,7 +188,9 @@ function buildClientRecords(rows, segmento){
     const imperdonables=[]; let cumplidos=0,totalValidos=0;
     for(let i=dynamicStart;i<dynamicEnd;i++){const rawVal=norm(row[i]); if(!isBiBooleanValue(rawVal)) continue; totalValidos++; const done=isDoneValue(rawVal); if(done) cumplidos++; imperdonables.push({nombre:getImpName(row1,meta,i), cumplido:done, rawVal});}
     const iceRaw=ICE_MAP[outnum], ice=iceRaw!==undefined&&iceRaw!==null&&iceRaw!==''?Number(iceRaw):null;
-    clients.push({key:`${segmento}|${lastCedi}|${lastRuta}|${outnum}|${cliente}`,segmento,outnum,cliente,ruta:lastRuta,jefe:lastJefe,detalle:lastDetalle,territorio:lastTerritorio,cedi:lastCedi,totalImperdonables:totalValidos,cumplidos,porcentaje:pct(cumplidos,totalValidos),ice,auditable:audSet.has(outnum),imperdonables});
+    const resultadoCSV = totalIdx>-1 ? parseResultadoPct(row[totalIdx]) : null;
+    const porcentaje = resultadoCSV!==null ? resultadoCSV : pct(cumplidos,totalValidos);
+    clients.push({key:`${segmento}|${lastCedi}|${lastRuta}|${outnum}|${cliente}`,segmento,outnum,cliente,ruta:lastRuta,jefe:lastJefe,detalle:lastDetalle,territorio:lastTerritorio,cedi:lastCedi,totalImperdonables:totalValidos,cumplidos,porcentaje,ice,auditable:audSet.has(outnum),imperdonables});
   }
   return clients;
 }
@@ -212,9 +223,8 @@ function filteredData(){return DATA.filter(d=>
 function stats(){
   const f=filteredData();
   const tc=f.length;
-  const ok=f.reduce((s,d)=>s+d.cumplidos,0);
-  const avance = tc===0 ? 0 : f.reduce((s,d)=>s+d.porcentaje,0) / tc;
-  return {totalClientes:tc,totalCumplidos:ok,totalAuditables:f.filter(d=>d.auditable).length,avance,objetivo:FILTERS.segmento==='TODOS'?null:CONFIG.objetivosSegmento[FILTERS.segmento]};
+  const avance=tc===0?0:f.reduce((s,d)=>s+d.porcentaje,0)/tc;
+  return {totalClientes:tc,totalCumplidos:f.reduce((s,d)=>s+d.cumplidos,0),totalAuditables:f.filter(d=>d.auditable).length,avance,objetivo:FILTERS.segmento==='TODOS'?null:CONFIG.objetivosSegmento[FILTERS.segmento]};
 }
 
 function renderFilters(isLoading=false){
