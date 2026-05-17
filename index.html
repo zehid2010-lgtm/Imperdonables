@@ -209,7 +209,13 @@ function filteredData(){return DATA.filter(d=>
   (FILTERS.ruta==='TODOS'||d.ruta===FILTERS.ruta) &&
   (FILTERS.auditables==='TODOS'||d.auditable)
 );}
-function stats(){const f=filteredData(); const tc=f.length, ok=f.reduce((s,d)=>s+d.cumplidos,0), tot=f.reduce((s,d)=>s+d.totalImperdonables,0); return {totalClientes:tc,totalCumplidos:ok,totalAuditables:f.filter(d=>d.auditable).length,avance:pct(ok,tot),objetivo:FILTERS.segmento==='TODOS'?null:CONFIG.objetivosSegmento[FILTERS.segmento]};}
+function stats(){
+  const f=filteredData();
+  const tc=f.length;
+  const ok=f.reduce((s,d)=>s+d.cumplidos,0);
+  const avance = tc===0 ? 0 : f.reduce((s,d)=>s+d.porcentaje,0) / tc;
+  return {totalClientes:tc,totalCumplidos:ok,totalAuditables:f.filter(d=>d.auditable).length,avance,objetivo:FILTERS.segmento==='TODOS'?null:CONFIG.objetivosSegmento[FILTERS.segmento]};
+}
 
 function renderFilters(isLoading=false){
   showView('viewFilters');
