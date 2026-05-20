@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Imperdonables Mobile Pro</title>
+<title>Imperdonables Mobile Pro - BRONCE corregido</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <style>
 :root{--bg:#020617;--card:#0f172acc;--line:#1e293b;--txt:#f8fafc;--muted:#94a3b8;--blue:#6366f1;--ok:#10b981;--warn:#f59e0b;--bad:#f43f5e;}
 *{box-sizing:border-box} html,body{margin:0;height:100%;font-family:Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#020617,#0f172a);color:var(--txt);overflow:hidden}
@@ -172,10 +175,35 @@ function stats(){
   const tc = f.length;
   const ok = f.reduce((s,d)=>s + Number(d.cumplidos || 0), 0);
   const tot = f.reduce((s,d)=>s + Number(d.totalImperdonables || 0), 0);
+
   let avance = pct(ok, tot);
-  const filtroGeneral = FILTERS.segmento !== 'TODOS' && FILTERS.jefe === 'TODOS' && FILTERS.ruta === 'TODOS' && FILTERS.auditables === 'TODOS';
-  if(filtroGeneral && CONFIG.valoresBI[FILTERS.segmento] !== undefined){avance = CONFIG.valoresBI[FILTERS.segmento];}
-  return {totalClientes:tc,totalCumplidos:ok,totalAuditables:f.filter(d=>d.auditable).length,avance:avance,objetivo:FILTERS.segmento==='TODOS'?null:CONFIG.objetivosSegmento[FILTERS.segmento]};
+
+  // Valores generales alineados a Power BI cuando NO hay filtro de jefe/ruta/auditables.
+  const valoresBI = {
+    AUTOSERVICIO: 72.0,
+    ORO: 66.3,
+    PLATA: 59.9,
+    BRONCE: 38.4,
+    KIOSCO: 42.0
+  };
+
+  const filtroGeneral =
+    FILTERS.segmento !== 'TODOS' &&
+    FILTERS.jefe === 'TODOS' &&
+    FILTERS.ruta === 'TODOS' &&
+    FILTERS.auditables === 'TODOS';
+
+  if(filtroGeneral && valoresBI[FILTERS.segmento] !== undefined){
+    avance = valoresBI[FILTERS.segmento];
+  }
+
+  return {
+    totalClientes: tc,
+    totalCumplidos: ok,
+    totalAuditables: f.filter(d=>d.auditable).length,
+    avance: avance,
+    objetivo: FILTERS.segmento === 'TODOS' ? null : CONFIG.objetivosSegmento[FILTERS.segmento]
+  };
 }
 
 function renderFilters(isLoading=false){
