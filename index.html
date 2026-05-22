@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Imperdonables Mobile Pro - BRONCE corregido</title>
+<title>Imperdonables Mobile Pro</title>
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
@@ -48,8 +48,8 @@ const CONFIG = {
   ],
   auditablesUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=1179124923&single=true&output=csv',
   iceUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRTJYwdbpcF8pL1OkOQc2ESZHPkIvNN6IRoCabAiE3GGKFoFNVH0_Rpfqsj8bxnyw/pub?gid=125032811&single=true&output=csv',
-  objetivosSegmento: { AUTOSERVICIO:73.77, ORO:73.52, PLATA:71.55, KIOSCO:36.90, BRONCE:43.90 },
-  valoresBI: { AUTOSERVICIO:72.0, ORO:66.3, PLATA:59.9, BRONCE:38.4, KIOSCO:42.0 },
+  objetivosSegmento: { AUTOSERVICIO:75.0, ORO:73.0, PLATA:64.0, KIOSCO:44.4, BRONCE:40.8 },
+  valoresBI: { AUTOSERVICIO:75.0, ORO:73.0, PLATA:64.0, BRONCE:40.8, KIOSCO:44.4 },
   iceByOutnum: {},
   auditableOutnums: [],
   headerAliases: {}
@@ -179,13 +179,7 @@ function stats(){
   let avance = pct(ok, tot);
 
   // Valores generales alineados a Power BI cuando NO hay filtro de jefe/ruta/auditables.
-  const valoresBI = {
-    AUTOSERVICIO: 72.0,
-    ORO: 66.3,
-    PLATA: 59.9,
-    BRONCE: 38.4,
-    KIOSCO: 42.0
-  };
+  const valoresBI = CONFIG.valoresBI || {};
 
   const filtroGeneral =
     FILTERS.segmento !== 'TODOS' &&
